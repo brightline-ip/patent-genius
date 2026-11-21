@@ -1,0 +1,37 @@
+{
+  "matter": "demo",
+  "required_sections": [
+    "# Technical disclosure",
+    "# Claims"
+  ],
+  "requirements": [
+    {
+      "id": "D1",
+      "decision": "mapped",
+      "evidence": [
+        "client:demo:disclosure:32439103ba2dc2d4b691261b"
+      ],
+      "draft_span": [
+        23,
+        184
+      ],
+      "kind": "disclosure"
+    },
+    {
+      "id": "C1",
+      "decision": "unknown",
+      "reason": "Claim scope and safety implementation need inventor/practitioner input.",
+      "kind": "constraint"
+    }
+  ],
+  "quotations": [
+    {
+      "evidence": "client:demo:disclosure:32439103ba2dc2d4b691261b",
+      "text": "treatment stops when a person enters the operating zone."
+    }
+  ],
+  "claim_scope": "no_claims",
+  "claims": [],
+  "support_records": [],
+  "issues": []
+}

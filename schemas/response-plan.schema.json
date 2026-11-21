@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://patent-genius.local/schemas/response-plan.schema.json",
+  "title": "Office-action response plan",
+  "description": "A practitioner's plan for answering one office action: the route, a strategy for every ground in the linked office-action analysis, proposed claim amendments with written-description support, arguments, evidence, and the evidence-table rows that informed each choice. Evidence rows are descriptive statistics (correlations); a plan is a drafting aid that needs practitioner approval and is not legal advice.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "plan_id", "analysis", "route", "grounds", "amendments", "arguments", "review"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "plan_id": {"type": "string"},
+    "analysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["application", "action_document_id"],
+      "description": "The office-action analysis (office-action-analysis.schema.json) this plan answers.",
+      "properties": {
+        "application": {"type": "string", "pattern": "^[0-9]{8}$"},
+        "action_document_id": {"type": "string"},
+        "analysis_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "route": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": {"enum": ["reply_non_final", "after_final_116", "rce_with_submission", "pre_appeal_request", "notice_of_appeal", "appeal_brief", "election_response", "interview_then_decide", "continuation_or_divisional", "abandon"]},
+        "interview_first": {"type": "boolean"},
+        "rationale": {"type": "string"},
+        "evidence": {"type": "array", "items": {"$ref": "#/$defs/evidenceCitation"}},
+        "fallback_route": {"type": "string"}
+      }
+    },
+    "grounds": {
+      "type": "array",
+      "minItems": 1,
+      "description": "One entry for every rejection, objection and requirement in the analysis; a ground left out of the plan is an incomplete reply (37 CFR 1.111(b)).",
+      "items": {"$ref": "#/$defs/groundStrategy"}
+    },
+    "amendments": {"type": "array", "items": {"$ref": "#/$defs/amendment"}},
+    "specification_amendments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind"],
+        "properties": {
+          "kind": {"enum": ["paragraph_replacement", "substitute_specification", "title", "abstract", "cross_reference", "headings"]},
+          "paragraph": {"type": "string"},
+          "markup": {"type": "string", "description": "Changes marked with <ins>...</ins> and ~~...~~ (37 CFR 1.121(b))."},
+          "clean_and_marked_copies": {"type": "boolean", "description": "Substitute specification: marked-up and clean copies plus a no-new-matter statement (37 CFR 1.125)."},
+          "no_new_matter_statement": {"type": "boolean"},
+          "addresses_grounds": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "drawing_changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["figure", "kind"],
+        "properties": {
+          "figure": {"type": "string"},
+          "kind": {"enum": ["replacement_sheet", "new_sheet", "annotated_sheet"]},
+          "change": {"type": "string"},
+          "support": {"type": "array", "items": {"$ref": "#/$defs/support"}},
+          "addresses_grounds": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "arguments": {"type": "array", "items": {"$ref": "#/$defs/argument"}},
+    "supporting_evidence": {
+      "type": "array",
+      "description": "Declarations and exhibits to be filed (enter them before final where possible).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "purpose"],
+        "properties": {
+          "kind": {"enum": ["declaration_1_132", "declaration_1_130", "declaration_1_131", "exhibit", "terminal_disclaimer", "ids"]},
+          "purpose": {"type": "string"},
+          "addresses_grounds": {"type": "array", "items": {"type": "string"}},
+          "declarant": {"type": "string"}
+        }
+      }
+    },
+    "interview": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request": {"type": "boolean"},
+        "form": {"enum": ["PTOL-413A", "telephone", "video", "in_person"]},
+        "agenda": {"type": "array", "items": {"type": "string"}},
+        "proposed_amendment_ref": {"type": "array", "items": {"type": "integer"}, "description": "Claim numbers of amendments in this plan to be discussed."},
+        "goals": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "risks": {
+      "type": "array",
+      "description": "Admissions, estoppel, disclaimer and scope risks a practitioner must clear.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "note"],
+        "properties": {
+          "kind": {"enum": ["prosecution_history_estoppel", "argument_based_disclaimer", "admission_prior_art", "scope_loss", "new_matter", "restriction_statement", "terminal_disclaimer_enforceability", "other"]},
+          "note": {"type": "string"}
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "disclaimer"],
+      "properties": {
+        "status": {"enum": ["draft", "practitioner_reviewed", "approved_for_filing"]},
+        "reviewer": {"type": "string"},
+        "reviewed_at": {"type": "string", "format": "date-time"},
+        "law_checked_as_of": {"type": "string", "format": "date"},
+        "disclaimer": {"const": "Drafting aid only; not legal advice. Evidence rows are descriptive correlations."}
+      },
+      "allOf": [{"if": {"properties": {"status": {"const": "approved_for_filing"}}}, "then": {"required": ["reviewer", "reviewed_at", "law_checked_as_of"]}}]
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "evidenceCitation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "table", "row", "value", "n"],
+      "description": "One number from an evidence table. Every figure a plan relies on must cite its table.",
+      "properties": {
+        "source": {"type": "string", "examples": ["examples/synthetic-evidence-table.md"]},
+        "table": {"type": "string", "description": "Table heading as it appears in the source."},
+        "row": {"type": "string"},
+        "column": {"type": "string"},
+        "value": {"type": "string", "examples": ["49%", "0.06%"]},
+        "n": {"type": "integer", "minimum": 0, "description": "Rows behind the value (rounds, applications, documents)."},
+        "unit": {"enum": ["rounds", "applications", "office_actions", "documents", "episodes", "patents", "trials", "decisions"]},
+        "kind": {"enum": ["classified_sample", "population"]}
+      }
+    },
+    "groundStrategy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ground_id", "strategy"],
+      "properties": {
+        "ground_id": {"type": "string", "description": "Id of a rejection, objection or requirement in the analysis."},
+        "strategy": {"enum": ["amend", "argue", "amend_and_argue", "cancel_claims", "terminal_disclaimer", "argue_double_patenting", "request_abeyance", "accept_objection_and_correct", "rewrite_allowable_claims", "traverse", "elect_without_traverse", "elect_with_traverse", "file_evidence", "defer_to_interview"]},
+        "rationale": {"type": "string"},
+        "template_section": {"type": "string", "examples": ["templates/oa-103-response.md#2"]},
+        "amendment_claims": {"type": "array", "items": {"type": "integer"}},
+        "argument_ids": {"type": "array", "items": {"type": "string"}},
+        "evidence": {"type": "array", "items": {"$ref": "#/$defs/evidenceCitation"}}
+      },
+      "allOf": [
+        {"if": {"properties": {"strategy": {"enum": ["amend", "amend_and_argue", "rewrite_allowable_claims"]}}}, "then": {"required": ["amendment_claims"]}},
+        {"if": {"properties": {"strategy": {"enum": ["argue", "amend_and_argue", "argue_double_patenting", "traverse", "elect_with_traverse"]}}}, "then": {"required": ["argument_ids"]}}
+      ]
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["document", "locator"],
+      "description": "Written-description support in the application as filed (35 U.S.C. 112(a); MPEP 714.02, 2163).",
+      "properties": {
+        "document": {"enum": ["specification_as_filed", "claims_as_filed", "drawings_as_filed", "priority_application"]},
+        "locator": {"type": "string", "examples": ["[0042]", "p. 12, ll. 3-9", "FIG. 4, element 410"]},
+        "quote": {"type": "string", "maxLength": 1500}
+      }
+    },
+    "amendment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claim", "status"],
+      "properties": {
+        "claim": {"type": "integer", "minimum": 1},
+        "status": {"enum": ["currently_amended", "new", "canceled", "withdrawn", "withdrawn_currently_amended", "previously_presented", "original"], "description": "Status identifier required by 37 CFR 1.121(c)."},
+        "markup": {"type": "string", "description": "Claim text with <ins>added</ins> and ~~deleted~~ (five or fewer characters may use [[ ]])."},
+        "source": {"enum": ["incorporated_dependent_claim", "new_feature_from_specification", "clarifying_or_narrowing_existing_term", "examiner_suggestion", "allowable_claim_rewritten", "formal_correction"]},
+        "support": {"type": "array", "items": {"$ref": "#/$defs/support"}},
+        "addresses_grounds": {"type": "array", "items": {"type": "string"}},
+        "new_matter_check": {"enum": ["not_done", "supported", "doubtful"]},
+        "scope_note": {"type": "string"}
+      },
+      "allOf": [
+        {"if": {"properties": {"status": {"enum": ["currently_amended", "new", "withdrawn_currently_amended"]}}}, "then": {"required": ["markup", "support", "new_matter_check"], "properties": {"support": {"minItems": 1}}}}
+      ]
+    },
+    "argument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "ground_id", "kind", "text"],
+      "properties": {
+        "id": {"type": "string"},
+        "ground_id": {"type": "string"},
+        "kind": {
+          "enum": [
+            "missing_limitation", "no_motivation_or_improper_combination", "teaching_away", "hindsight", "mischaracterized_reference", "claim_interpretation", "non_analogous_art", "secondary_considerations", "official_notice_traversal", "not_prior_art", "not_arranged_as_claimed", "dependent_claims_separately_argued",
+            "not_abstract_prong1", "practical_application_prong2", "technical_improvement", "significantly_more_step2b", "specific_implementation", "uspto_examples_guidance", "case_law_analogy", "prima_facie_procedural",
+            "argued_definite_to_posita", "cited_spec_support", "argued_not_means_plus_function",
+            "patentably_distinct_from_reference_claims", "reference_not_commonly_owned_or_no_overlap", "safe_harbor_121", "provisional_rejection_two_way_or_later_filed",
+            "no_serious_search_burden", "not_distinct_as_asserted", "linking_or_generic_claim",
+            "amendment_relied_on", "other"
+          ]
+        },
+        "claims": {"type": "array", "items": {"type": "integer"}},
+        "claim_language": {"type": "string", "description": "Exact quoted limitation the argument turns on."},
+        "reference_locators": {"type": "array", "items": {"type": "string"}},
+        "text": {"type": "string"},
+        "authority": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["citation", "checked_as_of"],
+            "properties": {
+              "citation": {"type": "string", "examples": ["MPEP 2143.03", "KSR Int'l Co. v. Teleflex Inc., 550 U.S. 398 (2007)"]},
+              "checked_as_of": {"type": "string", "format": "date", "description": "Date the citation was checked as current."}
+            }
+          }
+        },
+        "evidence": {"type": "array", "items": {"$ref": "#/$defs/evidenceCitation"}}
+      }
+    }
+  }
+}

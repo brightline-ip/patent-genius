@@ -1,0 +1,4 @@
+{
+ "agri": ["A01B", "A01C1/00"],
+ "soil_sensing": {"seeds": ["G01N33/24"], "historical_prefixes": ["G01N33/"]}
+}

@@ -1,0 +1,242 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://patent-genius.local/schemas/office-action-analysis.schema.json",
+  "title": "Office-action analysis",
+  "description": "Structured analysis of one USPTO office action: every rejection and objection, its grounds, the claims affected, the references and the examiner's stated rationale, each tied to a locator in the source document. Category vocabularies are fixed so analyses can be compared across actions. Descriptive record for practitioner review; it is not legal advice and carries no finding of patentability.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "application", "action", "rejections", "objections", "references", "provenance"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "application": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["number"],
+      "properties": {
+        "number": {"type": "string", "pattern": "^[0-9]{8}$", "description": "USPTO application number, digits only."},
+        "art_unit": {"type": "string", "pattern": "^[0-9]{4}$"},
+        "examiner": {"type": "string"},
+        "technology": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,31}$", "description": "A field name from the user's scope, or other."},
+        "effective_filing_date": {"type": "string", "format": "date"},
+        "aia": {"type": "boolean", "description": "First-inventor-to-file application (AIA status)."}
+      }
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["document_id", "document_code", "kind"],
+      "properties": {
+        "document_id": {"type": "string"},
+        "document_code": {"type": "string", "examples": ["CTNF", "CTFR", "CTRS", "CTEQ", "CTAV"]},
+        "kind": {"enum": ["non_final", "final", "restriction_election", "ex_parte_quayle", "advisory", "notice_of_allowance", "other"]},
+        "mail_date": {"type": "string", "format": "date", "description": "Optional: present when supplied with the request or read from the text of the action."},
+        "shortened_statutory_period_months": {"type": "integer", "minimum": 1, "maximum": 6},
+        "source_sha256": {"$ref": "#/$defs/sha256"},
+        "source_form": {"enum": ["xml", "docx", "pdf_text", "ocr"], "description": "OCR-derived text must be checked against the image before quotation."},
+        "previous_action_document_id": {"type": "string"}
+      }
+    },
+    "claims_status": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Disposition of claims as stated on the office-action summary.",
+      "properties": {
+        "pending": {"$ref": "#/$defs/claimList"},
+        "rejected": {"$ref": "#/$defs/claimList"},
+        "objected_to": {"$ref": "#/$defs/claimList"},
+        "allowed": {"$ref": "#/$defs/claimList"},
+        "withdrawn": {"$ref": "#/$defs/claimList"},
+        "independent": {"$ref": "#/$defs/claimList"}
+      }
+    },
+    "rejections": {"type": "array", "items": {"$ref": "#/$defs/rejection"}},
+    "objections": {"type": "array", "items": {"$ref": "#/$defs/objection"}},
+    "restriction": {"$ref": "#/$defs/restriction"},
+    "references": {"type": "array", "items": {"$ref": "#/$defs/reference"}},
+    "allowable_subject_matter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["indicated"],
+      "properties": {
+        "indicated": {"type": "boolean"},
+        "claims": {"$ref": "#/$defs/claimList"},
+        "condition": {"enum": ["rewrite_in_independent_form", "overcome_112_and_rewrite", "allowed_as_is", "other"]},
+        "reasons_text": {"type": "string"},
+        "locator": {"$ref": "#/$defs/locator"}
+      }
+    },
+    "response_to_arguments": {
+      "type": "array",
+      "description": "The examiner's answers to the applicant's previous arguments.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["summary"],
+        "properties": {
+          "ground_ids": {"type": "array", "items": {"type": "string"}},
+          "disposition": {"enum": ["persuasive", "not_persuasive", "moot_new_ground", "partially_persuasive", "unclear"]},
+          "summary": {"type": "string", "maxLength": 1000},
+          "locator": {"$ref": "#/$defs/locator"}
+        }
+      }
+    },
+    "interview": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "examiner_invites_interview": {"type": "boolean"},
+        "prior_interview_summary_document_id": {"type": "string"}
+      }
+    },
+    "provenance": {"$ref": "#/$defs/provenance"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "claimList": {"type": "array", "items": {"type": "integer", "minimum": 1}, "uniqueItems": true},
+    "locator": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Where the statement appears. Use the most precise available: page and paragraph for the office action; column/line or paragraph for references.",
+      "properties": {
+        "document_id": {"type": "string"},
+        "page": {"type": "integer", "minimum": 1},
+        "paragraph": {"type": "string", "examples": ["7", "[0042]"]},
+        "column_line": {"type": "string", "examples": ["col. 4, ll. 10-25"]},
+        "figure": {"type": "string"},
+        "char_start": {"type": "integer", "minimum": 0},
+        "char_end": {"type": "integer", "minimum": 0}
+      }
+    },
+    "rejection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "statute", "claims"],
+      "properties": {
+        "id": {"type": "string", "description": "Stable identifier within this analysis, e.g. R1."},
+        "statute": {"enum": ["101", "102", "103", "112(a)", "112(b)", "112(d)", "112(f)", "double_patenting_nonstatutory", "double_patenting_statutory", "other"]},
+        "statutory_subsection": {"type": "string", "examples": ["102(a)(1)", "102(a)(2)", "112(a) written description", "112(a) enablement"]},
+        "claims": {"$ref": "#/$defs/claimList"},
+        "reference_ids": {"type": "array", "items": {"type": "string"}, "description": "References relied on, primary first."},
+        "conflicting_application_or_patent": {"type": "string", "description": "Double patenting: the patent or copending application the claims are rejected over."},
+        "provisional": {"type": "boolean", "description": "Double patenting over a copending application not yet patented."},
+        "categories": {
+          "type": "array",
+          "uniqueItems": true,
+          "description": "Examiner-side categories from the matching classifier vocabulary (statute-specific; see $defs/vocabulary).",
+          "items": {"type": "string"}
+        },
+        "examiner_rationale": {"type": "string", "maxLength": 4000, "description": "The examiner's stated reasoning, summarized or quoted with a locator."},
+        "official_notice": {"type": "boolean"},
+        "new_ground": {"type": "boolean", "description": "Ground not present in the previous action (relevant to finality)."},
+        "limitation_mappings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["claim", "limitation"],
+            "properties": {
+              "claim": {"type": "integer", "minimum": 1},
+              "limitation": {"type": "string", "description": "Exact claim language."},
+              "reference_id": {"type": "string"},
+              "reference_locator": {"$ref": "#/$defs/locator"},
+              "examiner_assertion": {"type": "string"},
+              "admitted_missing": {"type": "boolean", "description": "The examiner concedes the primary reference lacks this limitation (103)."}
+            }
+          }
+        },
+        "examiner_suggested_fix": {"type": "string"},
+        "locator": {"$ref": "#/$defs/locator"}
+      },
+      "allOf": [
+        {"if": {"properties": {"statute": {"const": "101"}}}, "then": {"properties": {"categories": {"items": {"$ref": "#/$defs/vocabulary/101"}}}}},
+        {"if": {"properties": {"statute": {"const": "102"}}}, "then": {"properties": {"categories": {"items": {"$ref": "#/$defs/vocabulary/102"}}}}},
+        {"if": {"properties": {"statute": {"const": "103"}}}, "then": {"properties": {"categories": {"items": {"$ref": "#/$defs/vocabulary/103"}}}}},
+        {"if": {"properties": {"statute": {"enum": ["112(a)", "112(b)", "112(d)", "112(f)"]}}}, "then": {"properties": {"categories": {"items": {"$ref": "#/$defs/vocabulary/112"}}}}},
+        {"if": {"properties": {"statute": {"enum": ["double_patenting_nonstatutory", "double_patenting_statutory"]}}}, "then": {"required": ["conflicting_application_or_patent"], "properties": {"categories": {"items": {"$ref": "#/$defs/vocabulary/double_patenting"}}}}}
+      ]
+    },
+    "objection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind"],
+      "properties": {
+        "id": {"type": "string"},
+        "kind": {"enum": ["claim", "specification", "drawing", "abstract", "title", "oath_declaration", "other"]},
+        "claims": {"$ref": "#/$defs/claimList"},
+        "categories": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/vocabulary/objection"}},
+        "basis": {"type": "string", "examples": ["37 CFR 1.75(c)", "37 CFR 1.83(a)", "37 CFR 1.84(p)(5)", "35 U.S.C. 132(a)", "informalities"]},
+        "required_action": {"type": "string"},
+        "examiner_suggested_fix": {"type": "string"},
+        "allowable_if_rewritten": {"type": "boolean", "description": "Claim objected to as dependent on a rejected base claim but otherwise allowable."},
+        "held_in_abeyance_allowed": {"type": "boolean", "description": "The examiner allows the correction to wait (e.g. drawings) until allowable subject matter."},
+        "locator": {"$ref": "#/$defs/locator"}
+      }
+    },
+    "restriction": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {"enum": ["restriction", "election_of_species", "both", "markush", "unity_of_invention"]},
+        "groups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["label"],
+            "properties": {
+              "label": {"type": "string", "examples": ["Group I", "Species A"]},
+              "claims": {"$ref": "#/$defs/claimList"},
+              "description": {"type": "string"},
+              "classification": {"type": "string", "description": "CPC the examiner assigns to the group."}
+            }
+          }
+        },
+        "distinctness_basis": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/vocabulary/restriction_basis"}},
+        "search_burden_reasons": {"type": "array", "items": {"type": "string"}},
+        "generic_claims": {"$ref": "#/$defs/claimList"},
+        "linking_claims": {"$ref": "#/$defs/claimList"},
+        "telephone_election_attempted": {"type": "boolean"},
+        "rejoinder_notice": {"type": "boolean", "description": "The requirement states the rejoinder conditions (MPEP 821.04)."}
+      }
+    },
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "citation", "kind"],
+      "properties": {
+        "id": {"type": "string", "description": "Short name used in rejections, e.g. 'Smith' or 'A'."},
+        "citation": {"type": "string", "examples": ["US 2015/0359644 A1", "US 10,123,456 B2", "WO 2019/123456"]},
+        "kind": {"enum": ["us_patent", "us_publication", "foreign", "npl", "applicant_admitted_prior_art", "unclear"]},
+        "document_number": {"type": "string", "pattern": "^[A-Z]{2}[A-Z0-9]{4,20}$", "description": "Normalised document number (country code and digits, no punctuation or kind code), present only when the citation contains a number."},
+        "match_basis": {"enum": ["document_number", "name_only"], "description": "name_only: the citation has no number; it is kept as written and is never used for matching."},
+        "first_named": {"type": "string"},
+        "date": {"type": "string", "format": "date"},
+        "role": {"enum": ["primary", "secondary", "tertiary_or_later", "anticipating", "double_patenting_reference", "evidentiary", "cited_not_relied_on"]},
+        "prior_art_basis": {"enum": ["102(a)(1)", "102(a)(2)", "pre_aia", "not_prior_art_argued", "unclear"]}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "created"],
+      "properties": {
+        "method": {"enum": ["manual", "model_classified", "rule_extracted", "mixed"]},
+        "classifier": {"type": "string", "description": "Instructions file and model, e.g. a path to the classifier instructions file plus the model name."},
+        "created": {"type": "string", "format": "date-time"},
+        "confidence": {"enum": ["high", "medium", "low"]},
+        "ocr_derived": {"type": "boolean"},
+        "human_verified": {"type": "boolean", "description": "A practitioner checked every field against the source document."},
+        "notes": {"type": "string"}
+      }
+    },
+    "vocabulary": {
+      "101": {"enum": ["mental_process", "mathematical_concept", "organizing_human_activity", "other_judicial_exception", "statutory_category", "not_stated"]},
+      "102": {"enum": ["express_disclosure", "inherent_disclosure", "broad_claim_interpretation", "not_stated"]},
+      "103": {"enum": ["teaching_suggestion_motivation", "simple_substitution", "known_technique_improvement", "obvious_to_try", "design_choice", "official_notice", "combining_prior_art_elements", "not_stated"]},
+      "112": {"enum": ["indefinite_term_of_degree", "lack_of_antecedent_basis", "unclear_scope", "means_plus_function_no_structure", "functional_or_result_claiming", "genus_without_species", "new_matter_amendment", "improper_dependency", "enablement", "other"]},
+      "double_patenting": {"enum": ["anticipated_by_reference_claims", "obvious_variant_of_reference_claims", "obvious_over_reference_claims_in_view_of_art", "same_invention_statutory", "not_stated"]},
+      "objection": {"enum": ["informality_typo_grammar", "lack_of_antecedent_basis", "dependent_on_rejected_claim_allowable", "improper_dependent_claim_1_75c", "duplicate_claims", "claim_numbering_or_status_identifier", "title_not_descriptive", "abstract_format_or_length", "missing_cross_reference_or_headings", "spec_new_matter_132", "drawing_feature_not_shown_1_83a", "drawing_reference_sign_1_84p", "drawing_quality_or_format", "drawing_labels_or_legends", "reference_sign_inconsistency", "trademark_or_hyperlink", "other"]},
+      "restriction_basis": {"enum": ["product_process_of_making", "product_process_of_using", "combination_subcombination", "independent_inventions", "species", "markush_unity", "lack_of_unity_371", "other"]}
+    }
+  }
+}

@@ -1,0 +1,84 @@
+PATENT GENIUS - GETTING STARTED
+===============================
+
+Program folder: {{ROOT}}
+Data folder:    {{DATA}}
+Hub command:    {{HUB}}
+
+The data folder holds your scope (scope.json), the office-action text files you want read (inputs\), collected data and the
+database (corpus\), any packs you write (packs\) and a lock folder. It is readable only by your Windows account. The uninstaller
+keeps it unless you choose to delete it: inputs\ and packs\ remain on this computer until you delete the folder yourself.
+They can hold client-confidential material.
+
+Patent Genius is a drafting and research aid for a registered practitioner. It is not legal advice. Everything it produces must be
+checked against the official record. It has no keys, no accounts and no background process.
+
+
+1. CHECK WHAT WORKS
+-------------------
+Start menu > Patent Genius - Check (or: "{{ROOT}}\PatentGenius.cmd" doctor). It shows Python, Node.js (only needed for the *.mjs
+harvest and download scripts), your data folder, your scope and whether the Patent Research Hub was found. It makes no network call.
+
+
+2. TRY IT (NO NETWORK)
+----------------------
+    "{{ROOT}}\PatentGenius.cmd" assess "{{ROOT}}\examples\sample\office-action.txt"
+    "{{ROOT}}\PatentGenius.cmd" scope show
+    "{{ROOT}}\PatentGenius.cmd" db build
+    "{{ROOT}}\PatentGenius.cmd" db report coverage
+
+assess prints a rule-based reading of an invented office action; nothing is written unless you add --out <file>.
+
+
+3. YOUR SCOPE
+-------------
+{{DATA}}\scope.json is an invented example (fields "agri" and "soil_sensing"). Replace every value with your own technology
+fields, CPC symbols and filing dates, then run:   PatentGenius.cmd scope validate
+To collect office-action rejection rows, "oa_rejections" must be listed in data_types.
+
+
+4. COLLECTING DATA (OPTIONAL; NEEDS THE PATENT RESEARCH HUB)
+------------------------------------------------------------
+`collect` needs the Patent Research Hub 0.2.0 or later (it holds your own USPTO key); it is Python and does not need Node.js (24.13 or later is
+only for the frame harvest and document download scripts, *.mjs). Patent Genius never
+reads the Hub's key file: it starts the Hub's gateway command for each call.
+The USPTO key needs a USPTO.gov account with an ID.me-verified identity, and a key not used for 90 days is deleted.
+
+    "{{ROOT}}\PatentGenius.cmd" collect plan        what a run would do (no request is made)
+    "{{ROOT}}\PatentGenius.cmd" collect run --yes   collect; it can be stopped and started again
+
+Read {{ROOT}}\docs\COLLECTING.md first. If the Hub is installed after Patent Genius, run the Repair shortcut so its command is recorded
+(PG_HUB_CMD).
+
+
+5. CONNECT AN AI ASSISTANT
+--------------------------
+Setup wrote two files in the program folder. It did not change any assistant's configuration. They hold paths only.
+
+  Claude Desktop:  Settings > Developer > Edit Config. Copy the "patent_genius" entry from
+                   {{ROOT}}\MCP-setup.json
+                   into the "mcpServers" section of claude_desktop_config.json, save, and restart Claude Desktop.
+  Claude Code:     copy the same "patent_genius" entry into the "mcpServers" section of a project's .mcp.json file.
+  Codex:           add the lines from
+                   {{ROOT}}\MCP-setup.codex.toml
+                   to %USERPROFILE%\.codex\config.toml
+
+The server offers eleven tools. None makes a provider call. To let it read an office-action file, save the file as .txt or .md in
+{{DATA}}\inputs (or set PG_TOOL_INPUT_ROOTS).
+
+
+6. REPAIR, UPDATE, UNINSTALL
+----------------------------
+Repair (Start menu) re-detects Python, Node.js and the Hub (it may offer a missing prerequisite if you say yes), refreshes the optional
+OCR package if installed, and regenerates PatentGenius.cmd, the MCP setup files, this guide and the shortcuts. It does not replace
+program files and does not touch your data. To update, run Setup.cmd from a newer download: that REPLACES the program folder, so
+files you saved inside it are deleted; keep your own files in the data folder. Uninstall removes the program folder and shortcuts and
+keeps the data folder unless you choose to delete it; its last lines say whether each folder was deleted or kept.
+
+
+DOCUMENTATION
+-------------
+  {{ROOT}}\README.md
+  {{ROOT}}\docs\           (COLLECTING.md, SIMILAR.md, PACK.md, HUB.md, FRAMES.md and more)
+  {{ROOT}}\DISCLAIMER.md   Output is not legal advice; check it against the official record.
+  {{ROOT}}\SECURITY.md

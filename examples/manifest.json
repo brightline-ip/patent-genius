@@ -1,0 +1,34 @@
+{
+  "schema_version": 3,
+  "documents": [
+    {
+      "id": "client:demo:disclosure",
+      "source_locator": "synthetic://demo/disclosure#characters=0-161",
+      "status": "ready",
+      "text_path": "disclosure.txt",
+      "sha256": "af43ecc56407026c04af8198b725b784ac3d08720b31201725db2375dc126ff1",
+      "normalization": {
+        "provider": "synthetic-fixture",
+        "warnings": []
+      },
+      "document_type": "disclosure",
+      "technologies": [
+        "agrotech",
+        "soil_sensing"
+      ],
+      "cpcs": [],
+      "units": [
+        {
+          "id": "client:demo:disclosure:32439103ba2dc2d4b691261b",
+          "start": 0,
+          "end": 161,
+          "source_locator": "synthetic://demo/disclosure#characters=0-161"
+        }
+      ],
+      "lane": "client_disclosure",
+      "matter": "demo",
+      "temporal_role": "unfiled_disclosure"
+    }
+  ],
+  "events": []
+}

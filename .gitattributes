@@ -1,0 +1,9 @@
+# keep hashed data byte-exact; normalize everything else to LF so SHA-256 pins in examples and tests are stable
+* text=auto eol=lf
+corpus/** -text
+public-originals/** -text
+tests/fixtures/** -text
+# the official USPTO list is shipped byte for byte (its SHA-256 is recorded in pg_tool/event_codes.json)
+pg_tool/data/*.csv -text
+# Windows command files need CRLF; the PowerShell scripts are ASCII and read the same either way
+*.cmd text eol=crlf

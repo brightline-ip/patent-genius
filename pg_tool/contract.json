@@ -1,0 +1,2206 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "urn:brightline-ip:patent-genius:tool-contract",
+ "title": "Patent Genius tool contract",
+ "contract_version": "1.1.0",
+ "compatibility": "Additive changes (new optional input fields, new output fields, new enum values in outputs) keep the major version. Removing or renaming a field, tightening an input, or changing a meaning bumps the major version. Callers must ignore unknown output fields.",
+ "limits": {
+  "max_input_bytes": 2097152,
+  "max_read_window_chars": 20000,
+  "max_search_limit": 50,
+  "max_report_chars": 200000,
+  "excerpt_chars": 300,
+  "local_timeout_s": 30,
+  "tool_timeout_s": 240
+ },
+ "tools": {
+  "pg_status": {
+   "description": "Local dataset inventory, scope, database and Hub-command availability. No network; nothing is started.",
+   "input": {
+    "$ref": "#/$defs/StatusInput"
+   },
+   "output_data": {
+    "$ref": "#/$defs/StatusData"
+   },
+   "schema_version": "1.0"
+  },
+  "pg_search": {
+   "description": "Search the applications in your own frames (local-frames). Live provider search is planned and not part of 0.1.0; collect data from the command line instead (pg_cli.py collect).",
+   "input": {
+    "$ref": "#/$defs/SearchInput"
+   },
+   "output_data": {
+    "$ref": "#/$defs/SearchData"
+   },
+   "schema_version": "1.0"
+  },
+  "pg_corpus": {
+   "description": "List an application's locally normalized public file-wrapper documents, or read one document in character windows.",
+   "input": {
+    "$ref": "#/$defs/CorpusInput"
+   },
+   "output_data": {
+    "$ref": "#/$defs/CorpusData"
+   },
+   "schema_version": "1.0"
+  },
+  "pg_trends": {
+   "description": "Office-action rejection rates grouped by a dimension, using the strict rule (legalSectionCode + actionTypeCategory = rejected).",
+   "input": {
+    "$ref": "#/$defs/TrendsInput"
+   },
+   "output_data": {
+    "$ref": "#/$defs/TrendsData"
+   },
+   "schema_version": "1.0"
+  },
+  "pg_post_grant": {
+   "description": "PTAB trials, Federal Circuit opinions citing the patent, family links and prosecution rejections for one patent or application, from the data in your data folder. No provider call.",
+   "input": {
+    "$ref": "#/$defs/PostGrantInput"
+   },
+   "output_data": {
+    "$ref": "#/$defs/PostGrantData"
+   },
+   "schema_version": "1.0"
+  },
+  "pg_template": {
+   "description": "One structural document shell by key: section headings with bracketed prompts, review flags and the DRAFT header. No argument text and no statistics.",
+   "input": {
+    "$ref": "#/$defs/TemplateInput"
+   },
+   "output_data": {
+    "$ref": "#/$defs/TemplateData"
+   },
+   "schema_version": "1.0"
+  },
+  "pg_assess_office_action": {
+   "description": "Extract rejections, objections, restriction, finality and header facts from office-action text with fixed rules, and list the issues a response would need to address (candidate strategy labels and open questions; none is chosen). Adds rejection rates only when you built that data. No model is used.",
+   "input": {
+    "$ref": "#/$defs/AssessInput"
+   },
+   "output_data": {
+    "$ref": "#/$defs/AssessData"
+   },
+   "schema_version": "1.0"
+  },
+  "pg_report": {
+   "description": "Assemble a Markdown report (facts, statistics from your own data, issue outline, open questions, sources, limitations) for a practitioner or writer to work from.",
+   "input": {
+    "$ref": "#/$defs/ReportInput"
+   },
+   "output_data": {
+    "$ref": "#/$defs/ReportData"
+   },
+   "schema_version": "1.0"
+  },
+  "pg_similar_office_actions": {
+   "description": "Rank the office actions in your own database by a published weighted similarity (statutes, cited document numbers, examiner, art unit, classification, finality) and summarise where those matches ended up, with counts and 95% intervals, one case per patent family. Missing features score 0; open cases are reported separately; applicant steps are kept apart from outcomes. Similar by these features only; no model, no prediction. Transaction codes are checked against the USPTO PatEx 2022 list; which codes count as an interview, an abandonment and so on is the tool's own mapping (pg_tool/event_codes.json), and only actions anchored on their own mailing event (or, failing that, their own action event) are used; interview and amendment shares count only actions whose next event is recognised. Shares ignore open cases and favour quickly resolved ones; min_n is never below 5.",
+   "input": {
+    "$ref": "#/$defs/SimilarInput"
+   },
+   "output_data": {
+    "$ref": "#/$defs/SimilarData"
+   },
+   "schema_version": "1.0"
+  },
+  "pg_response_pack": {
+   "description": "Build a response material pack for one office action: typed facts, issues, authority pointers, art unit and examiner counts, a similar-action summary and a fact-filled shell. Every sentence is a fixed template with typed slots: it contains no tool-authored argument text, chooses no strategy and computes no deadline. Built in memory; nothing is written.",
+   "input": {
+    "$ref": "#/$defs/PackInput"
+   },
+   "output_data": {
+    "$ref": "#/$defs/PackData"
+   },
+   "schema_version": "1.0"
+  },
+  "pg_db_report": {
+   "description": "A named report from the database you built (overview, rejection rates, examiners, art units, coverage ...). Read-only; groups below min_n are left out; examiner filters match one exact name.",
+   "input": {
+    "$ref": "#/$defs/DbReportInput"
+   },
+   "output_data": {
+    "$ref": "#/$defs/DbReportData"
+   },
+   "schema_version": "1.0"
+  }
+ },
+ "$defs": {
+  "AppNo": {
+   "type": "string",
+   "pattern": "^[0-9]{8}$"
+  },
+  "PatentNo": {
+   "type": "string",
+   "pattern": "^(RE|PP|D)?[0-9]{5,8}$"
+  },
+  "Statute": {
+   "type": "string",
+   "enum": [
+    "101",
+    "102",
+    "103",
+    "112",
+    "double_patenting"
+   ]
+  },
+  "Offsets": {
+   "type": "array",
+   "prefixItems": [
+    {
+     "type": "integer",
+     "minimum": 0
+    },
+    {
+     "type": "integer",
+     "minimum": 0
+    }
+   ],
+   "minItems": 2,
+   "maxItems": 2
+  },
+  "Envelope": {
+   "type": "object",
+   "required": [
+    "tool",
+    "contract_version",
+    "schema_version",
+    "generated_at",
+    "status",
+    "data",
+    "provenance",
+    "caveats",
+    "warnings",
+    "disclaimer",
+    "boundary",
+    "interpretation"
+   ],
+   "properties": {
+    "tool": {
+     "type": "string"
+    },
+    "contract_version": {
+     "type": "string"
+    },
+    "request_id": {
+     "type": "string"
+    },
+    "matter_ref": {
+     "type": "string"
+    },
+    "generated_at": {
+     "type": "string",
+     "format": "date-time"
+    },
+    "status": {
+     "enum": [
+      "ok",
+      "partial",
+      "not_found",
+      "deferred",
+      "error"
+     ]
+    },
+    "data": {
+     "type": "object"
+    },
+    "error": {
+     "type": "object",
+     "required": [
+      "code",
+      "message"
+     ],
+     "properties": {
+      "code": {
+       "enum": [
+        "invalid_input",
+        "not_found",
+        "out_of_scope_path",
+        "too_large",
+        "timeout",
+        "internal"
+       ]
+      },
+      "message": {
+       "type": "string",
+       "description": "Never contains caller-supplied text."
+      }
+     }
+    },
+    "provenance": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "kind",
+       "ref"
+      ],
+      "properties": {
+       "kind": {
+        "enum": [
+         "local",
+         "corpus",
+         "caller",
+         "template",
+         "derived"
+        ]
+       },
+       "ref": {
+        "type": "string"
+       },
+       "sha256": {
+        "type": "string"
+       },
+       "retrieved_at": {
+        "type": "string"
+       },
+       "note": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "caveats": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "warnings": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "disclaimer": {
+     "const": "Drafting and research aid for a registered practitioner. Not legal advice."
+    },
+    "boundary": {
+     "type": "object",
+     "required": [
+      "lane",
+      "classification",
+      "persisted_by_tool",
+      "hub_store",
+      "model_used",
+      "live_calls"
+     ],
+     "properties": {
+      "lane": {
+       "enum": [
+        "public",
+        "caller-supplied"
+       ]
+      },
+      "classification": {
+       "enum": [
+        "public",
+        "caller-confidential"
+       ],
+       "description": "caller-confidential = caller-supplied material (e.g. a client office action); processed in memory, never persisted by the tool, and never to be added to public shared corpora."
+      },
+      "persisted_by_tool": {
+       "const": false
+      },
+      "hub_store": {
+       "type": "boolean",
+       "description": "Always false: no tool stores anything in a Hub database."
+      },
+      "model_used": {
+       "const": false
+      },
+      "live_calls": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "note": {
+       "type": "string"
+      },
+      "matter": {
+       "enum": [
+        "client",
+        null
+       ]
+      }
+     }
+    },
+    "interpretation": {
+     "type": "object",
+     "required": [
+      "status",
+      "label"
+     ],
+     "properties": {
+      "status": {
+       "enum": [
+        "not_requested",
+        "unavailable",
+        "provided"
+       ]
+      },
+      "label": {
+       "type": "string"
+      },
+      "model": {
+       "type": "string"
+      },
+      "text": {
+       "type": "string"
+      }
+     }
+    },
+    "schema_version": {
+     "type": "string"
+    }
+   }
+  },
+  "StatusInput": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "request_id": {
+     "type": "string",
+     "maxLength": 80
+    },
+    "matter_ref": {
+     "type": "string",
+     "maxLength": 80
+    }
+   }
+  },
+  "StatusData": {
+   "type": "object",
+   "required": [
+    "datasets",
+    "templates",
+    "live"
+   ],
+   "properties": {
+    "datasets": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "name",
+       "path",
+       "present"
+      ],
+      "properties": {
+       "name": {
+        "type": "string"
+       },
+       "path": {
+        "type": "string"
+       },
+       "present": {
+        "type": "boolean"
+       },
+       "bytes": {
+        "type": "integer"
+       },
+       "modified": {
+        "type": "string"
+       },
+       "detail": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "templates": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "live": {
+     "type": "object",
+     "properties": {
+      "enabled": {
+       "type": "boolean"
+      },
+      "hub_present": {
+       "type": "boolean"
+      },
+      "usptolock": {
+       "type": "string"
+      }
+     }
+    },
+    "parser": {
+     "type": "object"
+    }
+   }
+  },
+  "SearchInput": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "source"
+   ],
+   "properties": {
+    "request_id": {
+     "type": "string"
+    },
+    "matter_ref": {
+     "type": "string"
+    },
+    "source": {
+     "enum": [
+      "local-frames"
+     ],
+     "description": "Only local-frames in 0.1.0: your own frames, no provider call. Live provider search is planned."
+    },
+    "query": {
+     "type": "string",
+     "maxLength": 500,
+     "description": "Text query. For local-frames: matched against applicant and CPC symbols."
+    },
+    "application_number": {
+     "$ref": "#/$defs/AppNo"
+    },
+    "patent_number": {
+     "$ref": "#/$defs/PatentNo"
+    },
+    "cpc": {
+     "type": "string",
+     "pattern": "^[A-HY][0-9]{2}[A-Z]([0-9]{1,4}(/[0-9]{1,6})?)?$"
+    },
+    "art_unit": {
+     "type": "string",
+     "pattern": "^[0-9]{4}$"
+    },
+    "stratum": {
+     "type": "string",
+     "pattern": "^[a-z][a-z0-9_]{0,31}$",
+     "description": "A field name defined in your scope.json (lower case, digits, underscores)."
+    },
+    "filing_year": {
+     "type": "integer",
+     "minimum": 1976,
+     "maximum": 2100
+    },
+    "limit": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 50,
+     "default": 20
+    },
+    "cursor": {
+     "type": "string",
+     "maxLength": 200
+    }
+   }
+  },
+  "SearchData": {
+   "type": "object",
+   "required": [
+    "source",
+    "results",
+    "complete"
+   ],
+   "properties": {
+    "source": {
+     "type": "string"
+    },
+    "results": {
+     "type": "array",
+     "items": {
+      "type": "object"
+     }
+    },
+    "total_reported": {
+     "type": [
+      "integer",
+      "null"
+     ],
+     "description": "Count the source reported; not a population size."
+    },
+    "next_cursor": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "complete": {
+     "type": "boolean",
+     "description": "True only when every matching local row was returned; live searches are never marked complete."
+    }
+   }
+  },
+  "CorpusInput": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "application_number"
+   ],
+   "properties": {
+    "request_id": {
+     "type": "string"
+    },
+    "matter_ref": {
+     "type": "string"
+    },
+    "application_number": {
+     "$ref": "#/$defs/AppNo"
+    },
+    "document_id": {
+     "type": "string",
+     "pattern": "^[A-Za-z0-9-]{6,64}$"
+    },
+    "offset": {
+     "type": "integer",
+     "minimum": 0,
+     "default": 0
+    },
+    "max_chars": {
+     "type": "integer",
+     "minimum": 500,
+     "maximum": 20000,
+     "default": 8000
+    },
+    "document_codes": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "maxLength": 10
+     }
+    }
+   }
+  },
+  "CorpusData": {
+   "type": "object",
+   "required": [
+    "application_number"
+   ],
+   "properties": {
+    "application_number": {
+     "type": "string"
+    },
+    "documents": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "document_id",
+       "code"
+      ],
+      "properties": {
+       "document_id": {
+        "type": "string"
+       },
+       "code": {
+        "type": "string"
+       },
+       "component": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "official_date": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "text_fidelity": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "markdown_sha256": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      }
+     }
+    },
+    "document": {
+     "type": "object",
+     "properties": {
+      "document_id": {
+       "type": "string"
+      },
+      "code": {
+       "type": "string"
+      },
+      "metadata": {
+       "type": "object"
+      },
+      "text": {
+       "type": "string"
+      },
+      "offset": {
+       "type": "integer"
+      },
+      "next_offset": {
+       "type": [
+        "integer",
+        "null"
+       ]
+      },
+      "total_chars": {
+       "type": "integer"
+      }
+     }
+    }
+   }
+  },
+  "TrendsInput": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "group_by"
+   ],
+   "properties": {
+    "request_id": {
+     "type": "string"
+    },
+    "matter_ref": {
+     "type": "string"
+    },
+    "group_by": {
+     "enum": [
+      "stratum",
+      "cpc_group",
+      "cpc_subclass",
+      "art_unit",
+      "filing_year",
+      "oa_year",
+      "oa_kind"
+     ]
+    },
+    "filters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "stratum": {
+       "type": "string",
+       "pattern": "^[a-z][a-z0-9_]{0,31}$",
+       "description": "A field name defined in your scope.json (lower case, digits, underscores)."
+      },
+      "cpc_prefix": {
+       "type": "string",
+       "pattern": "^[A-HY][0-9A-Z/]{0,15}$"
+      },
+      "art_unit": {
+       "type": "string",
+       "pattern": "^[0-9]{4}$"
+      },
+      "filing_year": {
+       "type": "integer"
+      },
+      "oa_kind": {
+       "enum": [
+        "CTNF",
+        "CTFR"
+       ]
+      }
+     }
+    },
+    "groups": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "maxLength": 20
+     },
+     "maxItems": 50,
+     "description": "Return only these group values."
+    },
+    "min_n": {
+     "type": "integer",
+     "minimum": 5,
+     "description": "Smallest group shown. Default: 5 for stratum/filing_year, 200 for cpc_group/cpc_subclass/art_unit, 100 for oa_year/oa_kind. Never below 5."
+    },
+    "limit": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 200,
+     "default": 50
+    }
+   }
+  },
+  "TrendsData": {
+   "type": "object",
+   "required": [
+    "unit",
+    "rule",
+    "frames",
+    "rows"
+   ],
+   "properties": {
+    "unit": {
+     "enum": [
+      "application",
+      "office_action"
+     ]
+    },
+    "rule": {
+     "type": "string"
+    },
+    "frames": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "denominator_note": {
+     "type": "string"
+    },
+    "rows": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "group",
+       "n"
+      ],
+      "properties": {
+       "group": {
+        "type": "string"
+       },
+       "n": {
+        "type": "integer"
+       },
+       "rates": {
+        "type": "object",
+        "additionalProperties": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 1
+        }
+       },
+       "counts": {
+        "type": "object",
+        "additionalProperties": {
+         "type": "integer"
+        }
+       }
+      }
+     }
+    },
+    "suppressed_groups": {
+     "type": "integer",
+     "description": "Groups below min_n not shown."
+    },
+    "min_n": {
+     "type": "integer"
+    },
+    "truncated": {
+     "type": "boolean"
+    }
+   }
+  },
+  "PostGrantInput": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "request_id": {
+     "type": "string"
+    },
+    "matter_ref": {
+     "type": "string"
+    },
+    "patent_number": {
+     "$ref": "#/$defs/PatentNo"
+    },
+    "application_number": {
+     "$ref": "#/$defs/AppNo"
+    }
+   },
+   "oneOf": [
+    {
+     "required": [
+      "patent_number"
+     ]
+    },
+    {
+     "required": [
+      "application_number"
+     ]
+    }
+   ]
+  },
+  "PostGrantData": {
+   "type": "object",
+   "required": [
+    "patent_number",
+    "application_number",
+    "ptab_trials",
+    "federal_circuit",
+    "coverage"
+   ],
+   "properties": {
+    "patent_number": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "application_number": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "ptab_trials": {
+     "type": "array",
+     "items": {
+      "type": "object"
+     }
+    },
+    "ptab_appeals": {
+     "type": "array",
+     "items": {
+      "type": "object"
+     }
+    },
+    "federal_circuit": {
+     "type": "array",
+     "items": {
+      "type": "object"
+     }
+    },
+    "family": {
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "prosecution_rejections": {
+     "type": [
+      "array",
+      "null"
+     ],
+     "items": {
+      "type": "string"
+     }
+    },
+    "coverage": {
+     "type": "object",
+     "description": "Which local datasets were searched, their snapshot dates, and known gaps (absence of a record is not proof of absence)."
+    },
+    "prosecution_actions": {
+     "type": [
+      "array",
+      "null"
+     ]
+    },
+    "frame_row": {
+     "type": [
+      "object",
+      "null"
+     ]
+    }
+   }
+  },
+  "TemplateInput": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "key"
+   ],
+   "properties": {
+    "request_id": {
+     "type": "string"
+    },
+    "matter_ref": {
+     "type": "string"
+    },
+    "key": {
+     "enum": [
+      "office-action-response",
+      "restriction-election",
+      "oa-issue-inventory",
+      "interview-notes",
+      "client-update",
+      "invention-intake",
+      "application",
+      "summary"
+     ]
+    },
+    "include_markdown": {
+     "type": "boolean",
+     "default": true
+    },
+    "sections": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "maxLength": 20
+     },
+     "description": "Section numbers to return (e.g. '0', '3.1'); default all."
+    }
+   }
+  },
+  "TemplateData": {
+   "type": "object",
+   "required": [
+    "key",
+    "template_id",
+    "path",
+    "sha256",
+    "title",
+    "kind",
+    "sections",
+    "evidence_tables",
+    "caveats",
+    "evidence_sources"
+   ],
+   "properties": {
+    "key": {
+     "type": "string"
+    },
+    "path": {
+     "type": "string"
+    },
+    "sha256": {
+     "type": "string"
+    },
+    "title": {
+     "type": "string"
+    },
+    "kind": {
+     "enum": [
+      "evidence-informed",
+      "structural-shell"
+     ]
+    },
+    "anchor": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "Section the key maps to inside a shared template (e.g. rce -> section 3)."
+    },
+    "markdown": {
+     "type": "string"
+    },
+    "sections": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "number",
+       "heading",
+       "level",
+       "offsets"
+      ],
+      "properties": {
+       "number": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "heading": {
+        "type": "string"
+       },
+       "level": {
+        "type": "integer"
+       },
+       "offsets": {
+        "$ref": "#/$defs/Offsets"
+       }
+      }
+     }
+    },
+    "evidence_tables": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "section",
+       "columns",
+       "rows"
+      ],
+      "properties": {
+       "section": {
+        "type": "string"
+       },
+       "columns": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       },
+       "rows": {
+        "type": "array",
+        "items": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        }
+       },
+       "section_heading": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "caveats": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "evidence_sources": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "path"
+      ],
+      "properties": {
+       "path": {
+        "type": "string"
+       },
+       "sha256": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "present": {
+        "type": "boolean"
+       }
+      }
+     }
+    },
+    "template_id": {
+     "type": "string"
+    },
+    "applies_to": {
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "version": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "template_status": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   }
+  },
+  "AssessInput": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "request_id": {
+     "type": "string"
+    },
+    "matter_ref": {
+     "type": "string"
+    },
+    "text": {
+     "type": "string",
+     "maxLength": 400000,
+     "description": "Office-action text supplied by the caller. Processed in memory only."
+    },
+    "file_path": {
+     "type": "string",
+     "maxLength": 1000,
+     "description": "UTF-8 .txt or .md under an allowed input root."
+    },
+    "application_number": {
+     "$ref": "#/$defs/AppNo"
+    },
+    "document_id": {
+     "type": "string",
+     "pattern": "^[A-Za-z0-9-]{6,64}$"
+    },
+    "context": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "stratum": {
+       "type": "string",
+       "pattern": "^[a-z][a-z0-9_]{0,31}$",
+       "description": "A field name defined in your scope.json (lower case, digits, underscores)."
+      },
+      "cpc": {
+       "type": "string",
+       "maxLength": 20
+      },
+      "art_unit": {
+       "type": "string",
+       "pattern": "^[0-9]{4}$"
+      }
+     }
+    },
+    "include_templates": {
+     "type": "boolean",
+     "default": true
+    },
+    "include_statistics": {
+     "type": "boolean",
+     "default": true
+    },
+    "include_excerpts": {
+     "type": "boolean",
+     "default": false,
+     "description": "Return matched caller text spans; default returns offsets only."
+    },
+    "interpretation": {
+     "enum": [
+      "none",
+      "request"
+     ],
+     "default": "none"
+    }
+   },
+   "oneOf": [
+    {
+     "required": [
+      "text"
+     ]
+    },
+    {
+     "required": [
+      "file_path"
+     ]
+    },
+    {
+     "required": [
+      "application_number",
+      "document_id"
+     ]
+    }
+   ]
+  },
+  "AssessData": {
+   "type": "object",
+   "required": [
+    "source",
+    "action_facts",
+    "analysis",
+    "parser_annotations",
+    "schema_conformance",
+    "plan_outline",
+    "statistics",
+    "not_recognised",
+    "parser"
+   ],
+   "properties": {
+    "source": {
+     "type": "object",
+     "properties": {
+      "kind": {
+       "enum": [
+        "caller-text",
+        "caller-file",
+        "local-corpus"
+       ]
+      },
+      "application_number": {
+       "type": "string"
+      },
+      "document_id": {
+       "type": "string"
+      },
+      "chars": {
+       "type": "integer"
+      },
+      "sha256": {
+       "type": "string"
+      }
+     }
+    },
+    "action_facts": {
+     "type": "object",
+     "properties": {
+      "finality": {
+       "enum": [
+        "final",
+        "non_final",
+        "unknown"
+       ]
+      },
+      "finality_basis": {
+       "type": "string"
+      },
+      "aia_status": {
+       "enum": [
+        "aia",
+        "pre_aia",
+        "unknown"
+       ]
+      },
+      "shortened_period_text_found": {
+       "type": "boolean"
+      },
+      "ocr_suspected": {
+       "type": "boolean"
+      },
+      "election_acknowledged": {
+       "type": "boolean"
+      }
+     }
+    },
+    "context": {
+     "type": "object"
+    },
+    "analysis": {
+     "description": "Shaped by schemas/office-action-analysis.schema.json (schema_version 1.0, provenance.method rule_extracted, human_verified false). See schema_conformance.",
+     "type": "object"
+    },
+    "parser_annotations": {
+     "type": "object",
+     "description": "Keyed by finding id (R1, O1, restriction, allowable_subject_matter): pattern_id, basis (form_paragraph|phrase|heading_only), confidence (pattern|heading_only|ambiguous), status_hint, ground, section, claims_text, repeats, excerpt (only with include_excerpts)."
+    },
+    "schema_conformance": {
+     "type": "object",
+     "properties": {
+      "schema": {
+       "type": "string"
+      },
+      "checked": {
+       "type": "boolean"
+      },
+      "valid": {
+       "type": "boolean"
+      },
+      "errors": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "plan_outline": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/PlanOutlineItem"
+     }
+    },
+    "statistics": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/EvidenceCitation"
+     }
+    },
+    "not_recognised": {
+     "type": "object",
+     "properties": {
+      "rejected_claims_without_ground": {
+       "type": "array",
+       "items": {
+        "type": "integer"
+       }
+      },
+      "headings_without_findings": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "ignored_rejection_sentences": {
+       "type": "array",
+       "items": {
+        "type": "object"
+       },
+       "description": "Withdrawn or recap (Response to Arguments) rejection sentences: offsets, statute, claims, reason."
+      },
+      "notes": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "parser": {
+     "type": "object",
+     "required": [
+      "name",
+      "version",
+      "validation"
+     ],
+     "properties": {
+      "name": {
+       "type": "string"
+      },
+      "version": {
+       "type": "string"
+      },
+      "validation": {
+       "type": "string"
+      }
+     }
+    },
+    "header": {
+     "type": "object",
+     "description": "Header facts read from the text of the action (art_unit, examiner, mail_date, application_number); each has value, how it was found and offsets. Unverified, and used for nothing except this result: no provider or network query and no write is made from them (local read-only database queries only)."
+    }
+   }
+  },
+  "ReportInput": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "subject"
+   ],
+   "properties": {
+    "request_id": {
+     "type": "string"
+    },
+    "matter_ref": {
+     "type": "string"
+    },
+    "subject": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "application_number": {
+       "$ref": "#/$defs/AppNo"
+      },
+      "patent_number": {
+       "$ref": "#/$defs/PatentNo"
+      },
+      "office_action": {
+       "$ref": "#/$defs/AssessInput"
+      },
+      "topic": {
+       "type": "object",
+       "additionalProperties": false,
+       "properties": {
+        "stratum": {
+         "type": "string",
+         "pattern": "^[a-z][a-z0-9_]{0,31}$",
+         "description": "A field name defined in your scope.json (lower case, digits, underscores)."
+        },
+        "cpc_prefix": {
+         "type": "string",
+         "maxLength": 16
+        },
+        "art_unit": {
+         "type": "string",
+         "pattern": "^[0-9]{4}$"
+        }
+       }
+      }
+     },
+     "minProperties": 1
+    },
+    "sections": {
+     "type": "array",
+     "items": {
+      "enum": [
+       "summary",
+       "office_action",
+       "templates",
+       "statistics",
+       "post_grant",
+       "sources",
+       "limitations"
+      ]
+     }
+    },
+    "title": {
+     "type": "string",
+     "maxLength": 200
+    }
+   }
+  },
+  "ReportData": {
+   "type": "object",
+   "required": [
+    "markdown",
+    "sections",
+    "contains_caller_text"
+   ],
+   "properties": {
+    "markdown": {
+     "type": "string"
+    },
+    "sections": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "id",
+       "heading",
+       "items"
+      ],
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "heading": {
+        "type": "string"
+       },
+       "items": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "required": [
+          "kind",
+          "text"
+         ],
+         "properties": {
+          "kind": {
+           "enum": [
+            "fact",
+            "statistic",
+            "template_guidance",
+            "open_question",
+            "limitation",
+            "source"
+           ]
+          },
+          "text": {
+           "type": "string"
+          },
+          "source": {
+           "type": "string"
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "contains_caller_text": {
+     "type": "boolean",
+     "description": "True if caller-supplied (client matter) text appears in the report."
+    }
+   }
+  },
+  "PlanOutlineItem": {
+   "type": "object",
+   "required": [
+    "order",
+    "issue_ids",
+    "title",
+    "template",
+    "candidate_strategies",
+    "triage_rows",
+    "steps",
+    "open_questions"
+   ],
+   "properties": {
+    "order": {
+     "type": "integer"
+    },
+    "issue_ids": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "title": {
+     "type": "string"
+    },
+    "template": {
+     "type": [
+      "object",
+      "null"
+     ],
+     "properties": {
+      "key": {
+       "type": "string"
+      },
+      "path": {
+       "type": "string"
+      },
+      "sha256": {
+       "type": "string"
+      },
+      "sections": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "candidate_strategies": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "description": "Values of response-plan.schema.json groundStrategy.strategy; candidates only, none is chosen."
+    },
+    "triage_rows": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "table_section": {
+        "type": "string"
+       },
+       "columns": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       },
+       "row": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       },
+       "why_selected": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "steps": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "open_questions": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "EvidenceCitation": {
+   "description": "Same shape as response-plan.schema.json $defs/evidenceCitation.",
+   "type": "object",
+   "required": [
+    "source",
+    "table",
+    "row",
+    "value",
+    "n"
+   ],
+   "properties": {
+    "source": {
+     "type": "string"
+    },
+    "table": {
+     "type": "string"
+    },
+    "row": {
+     "type": "string"
+    },
+    "column": {
+     "type": "string"
+    },
+    "value": {
+     "type": "string"
+    },
+    "n": {
+     "type": "integer",
+     "minimum": 0
+    },
+    "unit": {
+     "enum": [
+      "rounds",
+      "applications",
+      "office_actions",
+      "documents",
+      "episodes",
+      "patents",
+      "trials",
+      "decisions"
+     ]
+    },
+    "kind": {
+     "enum": [
+      "classified_sample",
+      "population"
+     ]
+    }
+   }
+  },
+  "SimilarInput": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "request_id": {
+     "type": "string"
+    },
+    "matter_ref": {
+     "type": "string"
+    },
+    "text": {
+     "type": "string",
+     "maxLength": 400000,
+     "description": "Office-action text supplied by the caller. Processed in memory only."
+    },
+    "file_path": {
+     "type": "string",
+     "maxLength": 1000,
+     "description": "UTF-8 .txt or .md under an allowed input root."
+    },
+    "application_number": {
+     "$ref": "#/$defs/AppNo"
+    },
+    "document_id": {
+     "type": "string",
+     "pattern": "^[A-Za-z0-9-]{6,64}$"
+    },
+    "features": {
+     "type": "object",
+     "additionalProperties": false,
+     "description": "Features of the action given directly (they win over what is read from the text). Treated as caller-confidential.",
+     "properties": {
+      "statutes": {
+       "type": "array",
+       "maxItems": 5,
+       "items": {
+        "enum": [
+         "101",
+         "102",
+         "103",
+         "112",
+         "dp"
+        ]
+       }
+      },
+      "references": {
+       "type": "array",
+       "maxItems": 40,
+       "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z]{2,4}[0-9]{4,14}$"
+       },
+       "description": "Normalised document numbers such as US10000002. Names are never matched."
+      },
+      "alice": {
+       "type": "boolean"
+      },
+      "mayo": {
+       "type": "boolean"
+      },
+      "examiner": {
+       "type": "string",
+       "maxLength": 80
+      },
+      "art_unit": {
+       "type": "string",
+       "pattern": "^[0-9]{4}$"
+      },
+      "cpc": {
+       "type": "string",
+       "maxLength": 20
+      },
+      "finality": {
+       "enum": [
+        "final",
+        "non_final"
+       ]
+      }
+     }
+    },
+    "context": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "cpc": {
+       "type": "string",
+       "maxLength": 20
+      },
+      "art_unit": {
+       "type": "string",
+       "pattern": "^[0-9]{4}$"
+      },
+      "examiner": {
+       "type": "string",
+       "maxLength": 80
+      }
+     }
+    },
+    "exclude_applications": {
+     "type": "array",
+     "maxItems": 50,
+     "items": {
+      "$ref": "#/$defs/AppNo"
+     },
+     "description": "Applications to leave out, with their patent families."
+    },
+    "filters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "field": {
+       "type": "string",
+       "pattern": "^[a-z][a-z0-9_]{0,31}$"
+      },
+      "filing_year_from": {
+       "type": "integer",
+       "minimum": 1976,
+       "maximum": 2100
+      },
+      "filing_year_to": {
+       "type": "integer",
+       "minimum": 1976,
+       "maximum": 2100
+      },
+      "finality": {
+       "enum": [
+        "final",
+        "non_final"
+       ]
+      }
+     }
+    },
+    "require": {
+     "type": "array",
+     "maxItems": 7,
+     "items": {
+      "enum": [
+       "statute_set",
+       "references",
+       "examiner",
+       "art_unit",
+       "cpc",
+       "ground_101",
+       "finality"
+      ]
+     },
+     "description": "Components that must be available and above 0 for a candidate to count."
+    },
+    "limit": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 50,
+     "default": 20
+    },
+    "min_score": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1,
+     "default": 0.5,
+     "description": "Candidates and summaries use every match at or above this score."
+    },
+    "min_n": {
+     "type": "integer",
+     "minimum": 5,
+     "maximum": 1000,
+     "default": 5,
+     "description": "Shares are not shown for fewer cases than this. Never below 5."
+    },
+    "include_outcomes": {
+     "type": "boolean",
+     "default": true
+    },
+    "weights": {
+     "type": "object",
+     "minProperties": 1,
+     "additionalProperties": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+     },
+     "description": "Override some of the published weights for this call (validated and echoed)."
+    }
+   },
+   "anyOf": [
+    {
+     "required": [
+      "text"
+     ]
+    },
+    {
+     "required": [
+      "file_path"
+     ]
+    },
+    {
+     "required": [
+      "application_number",
+      "document_id"
+     ]
+    },
+    {
+     "required": [
+      "features"
+     ]
+    }
+   ]
+  },
+  "SimilarData": {
+   "type": "object",
+   "required": [
+    "caveat",
+    "weights",
+    "candidates",
+    "outcome_summary",
+    "applicant_action_labels",
+    "coverage"
+   ],
+   "properties": {
+    "caveat": {
+     "type": "string"
+    },
+    "query": {
+     "type": "object"
+    },
+    "weights": {
+     "type": "object"
+    },
+    "tiers": {
+     "type": "array"
+    },
+    "candidates": {
+     "type": "array",
+     "items": {
+      "type": "object"
+     }
+    },
+    "candidates_matching": {
+     "type": "integer"
+    },
+    "outcome_summary": {
+     "type": "object"
+    },
+    "applicant_action_labels": {
+     "type": "object"
+    },
+    "coverage": {
+     "type": "object"
+    }
+   }
+  },
+  "PackInput": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "request_id": {
+     "type": "string"
+    },
+    "matter_ref": {
+     "type": "string"
+    },
+    "text": {
+     "type": "string",
+     "maxLength": 400000,
+     "description": "Office-action text supplied by the caller. Processed in memory only."
+    },
+    "file_path": {
+     "type": "string",
+     "maxLength": 1000,
+     "description": "UTF-8 .txt or .md under an allowed input root."
+    },
+    "application_number": {
+     "$ref": "#/$defs/AppNo"
+    },
+    "document_id": {
+     "type": "string",
+     "pattern": "^[A-Za-z0-9-]{6,64}$"
+    },
+    "features": {
+     "type": "object",
+     "additionalProperties": false,
+     "description": "Features of the action given directly (they win over what is read from the text). Treated as caller-confidential.",
+     "properties": {
+      "statutes": {
+       "type": "array",
+       "maxItems": 5,
+       "items": {
+        "enum": [
+         "101",
+         "102",
+         "103",
+         "112",
+         "dp"
+        ]
+       }
+      },
+      "references": {
+       "type": "array",
+       "maxItems": 40,
+       "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z]{2,4}[0-9]{4,14}$"
+       },
+       "description": "Normalised document numbers such as US10000002. Names are never matched."
+      },
+      "alice": {
+       "type": "boolean"
+      },
+      "mayo": {
+       "type": "boolean"
+      },
+      "examiner": {
+       "type": "string",
+       "maxLength": 80
+      },
+      "art_unit": {
+       "type": "string",
+       "pattern": "^[0-9]{4}$"
+      },
+      "cpc": {
+       "type": "string",
+       "maxLength": 20
+      },
+      "finality": {
+       "enum": [
+        "final",
+        "non_final"
+       ]
+      }
+     }
+    },
+    "context": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "cpc": {
+       "type": "string",
+       "maxLength": 20
+      },
+      "art_unit": {
+       "type": "string",
+       "pattern": "^[0-9]{4}$"
+      },
+      "examiner": {
+       "type": "string",
+       "maxLength": 80
+      }
+     }
+    },
+    "exclude_applications": {
+     "type": "array",
+     "maxItems": 50,
+     "items": {
+      "$ref": "#/$defs/AppNo"
+     },
+     "description": "Applications to leave out, with their patent families."
+    },
+    "filters": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "field": {
+       "type": "string",
+       "pattern": "^[a-z][a-z0-9_]{0,31}$"
+      },
+      "filing_year_from": {
+       "type": "integer",
+       "minimum": 1976,
+       "maximum": 2100
+      },
+      "filing_year_to": {
+       "type": "integer",
+       "minimum": 1976,
+       "maximum": 2100
+      },
+      "finality": {
+       "enum": [
+        "final",
+        "non_final"
+       ]
+      }
+     }
+    },
+    "require": {
+     "type": "array",
+     "maxItems": 7,
+     "items": {
+      "enum": [
+       "statute_set",
+       "references",
+       "examiner",
+       "art_unit",
+       "cpc",
+       "ground_101",
+       "finality"
+      ]
+     },
+     "description": "Components that must be available and above 0 for a candidate to count."
+    },
+    "limit": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 50,
+     "default": 20
+    },
+    "min_score": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1,
+     "default": 0.5,
+     "description": "Candidates and summaries use every match at or above this score."
+    },
+    "min_n": {
+     "type": "integer",
+     "minimum": 5,
+     "maximum": 1000,
+     "default": 5,
+     "description": "Shares are not shown for fewer cases than this. Never below 5."
+    },
+    "weights": {
+     "type": "object",
+     "minProperties": 1,
+     "additionalProperties": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+     },
+     "description": "Override some of the published weights for this call (validated and echoed)."
+    },
+    "include_quotes": {
+     "type": "boolean",
+     "default": false,
+     "description": "Add a fenced, capped, labelled untrusted_quote to each issue. Off by default."
+    },
+    "include_shell": {
+     "type": "boolean",
+     "default": true
+    }
+   },
+   "oneOf": [
+    {
+     "required": [
+      "text"
+     ]
+    },
+    {
+     "required": [
+      "file_path"
+     ]
+    },
+    {
+     "required": [
+      "application_number",
+      "document_id"
+     ]
+    }
+   ]
+  },
+  "PackData": {
+   "type": "object",
+   "required": [
+    "pack",
+    "markdown",
+    "persisted"
+   ],
+   "properties": {
+    "pack": {
+     "type": "object",
+     "description": "Typed facts, issues, authority pointers, counts and the similar-action summary. No tool-authored argument text."
+    },
+    "markdown": {
+     "type": "string"
+    },
+    "persisted": {
+     "type": "boolean",
+     "description": "Always false for this tool: it writes nothing. The command line writes only to a path you name and says so."
+    }
+   }
+  },
+  "DbReportInput": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "report"
+   ],
+   "properties": {
+    "request_id": {
+     "type": "string"
+    },
+    "matter_ref": {
+     "type": "string"
+    },
+    "report": {
+     "enum": [
+      "overview",
+      "rejections_by_field",
+      "101_outcomes",
+      "101_art_units",
+      "ptab_appeals_by_field",
+      "ptab_trials_by_field",
+      "examiners",
+      "examiner_101",
+      "art_units",
+      "coverage"
+     ]
+    },
+    "field": {
+     "type": "string",
+     "pattern": "^[a-z][a-z0-9_]{0,31}$"
+    },
+    "min_n": {
+     "type": "integer",
+     "minimum": 5,
+     "maximum": 100000,
+     "default": 30,
+     "description": "Groups smaller than this are left out."
+    },
+    "examiner": {
+     "type": "string",
+     "pattern": "^[A-Za-z][A-Za-z' .\\-]{0,40}(, [A-Za-z' .\\-]{1,40})?$",
+     "description": "Exact examiner name as on the application record (case ignored). No patterns."
+    },
+    "art_unit": {
+     "type": "string",
+     "pattern": "^[0-9]{4}$"
+    },
+    "years": {
+     "type": "string",
+     "pattern": "^(all|[0-9]{4}(-[0-9]{4})?)$",
+     "default": "all"
+    },
+    "limit": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 500,
+     "default": 200
+    }
+   }
+  },
+  "DbReportData": {
+   "type": "object",
+   "required": [
+    "report",
+    "columns",
+    "rows"
+   ],
+   "properties": {
+    "report": {
+     "type": "string"
+    },
+    "description": {
+     "type": "string"
+    },
+    "columns": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "rows": {
+     "type": "array",
+     "items": {
+      "type": "array"
+     }
+    },
+    "suppressed_groups": {
+     "type": "integer"
+    },
+    "truncated": {
+     "type": "boolean"
+    },
+    "built": {
+     "type": "object"
+    }
+   }
+  }
+ },
+ "live_policy": "No tool makes a provider call in 0.1.0. Live provider search through the Patent Research Hub is planned. Data is collected from the command line (pg_cli.py collect), which reaches providers only through the Hub gateway command; the Python tool service never holds a provider key.",
+ "data_boundary": "Caller-supplied text (text, file_path) is confidential matter material. This tool processes it in memory, never writes it, and never sends it to a provider, a model or the public corpus; no tool makes a provider call. It must not be added to a public corpus or the Hub's public research database. Outputs always carry offsets, claim numbers, statutes, reference citation strings, restriction-group descriptions and header facts read from the text (cleaned and capped); sentence excerpts only when include_excerpts is true (each capped at excerpt_chars). Everything quoted from a document is untrusted data, not instructions. The response pack and the similar-action finder keep caller text in memory only (the pack is never written by the MCP tool). A pack quotes the action only when include_quotes is true, in a fenced, capped untrusted_quote field. No tool-authored argument text is ever produced."
+}

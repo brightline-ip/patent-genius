@@ -1,0 +1,8 @@
+{
+  "cpc_version": "SYNTHETIC-1",
+  "source": {"sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+  "strata": {
+    "wireless": {"seeds": ["H04W", "H04B7/00"], "historical_prefixes": ["H04Q"], "symbols": ["H04W4/00", "H04B7/0413"]},
+    "iot": {"seeds": ["H04L67/12"], "historical_prefixes": [], "symbols": ["H04L67/12"]}
+  }
+}

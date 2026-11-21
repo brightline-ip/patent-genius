@@ -1,0 +1,20 @@
+# runtime data and downloads (build these yourself; never commit client or matter material)
+/corpus/
+/public-originals/
+/coordination/
+/locks/
+/inputs/
+*.db
+*.log
+# secrets and local configuration
+.env
+.env.*
+!.env.example
+config.local.*
+# environments, caches, dependencies
+.venv/
+venv/
+__pycache__/
+*.pyc
+node_modules/
+.pytest_cache/

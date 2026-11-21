@@ -1,0 +1,23 @@
+SYNTHETIC EXAMPLE - invented application and invented office action, written for Patent Genius. No real application, party or reference: the document numbers below cannot exist (a publication year 2099, a patent number above 99 million).
+
+Application No. 99/000,001 (invented)   Art Unit 9999 (invented)
+Examiner: Alex Example (invented)   Notification Date: 01/15/2026 (invented)
+
+Notice of Pre-AIA or AIA Status
+The present application, filed on or after March 16, 2013, is being examined under the first inventor to file provisions of the AIA.
+
+Claim Rejections - 35 USC § 112
+Claim 3 is rejected under 35 U.S.C. 112(b) as being indefinite for failing to particularly point out and distinctly claim the subject matter which the inventor regards as the invention.
+
+Claim Rejections - 35 USC § 103
+Claims 1, 2 and 4-6 are rejected under 35 U.S.C. 103 as being unpatentable over Example (US 2099/9999901) in view of Sample (US 99,999,902).
+Claim 7 is rejected under 35 U.S.C. 103 as being unpatentable over Example (US 2099/9999901) in view of Sample (US 99,999,902), and further in view of Demo (WO 2099/999903).
+
+Claim Objections
+Claim 8 is objected to because of the following informalities: "teh" should read "the". Appropriate correction is required.
+
+Allowable Subject Matter
+Claim 9 is objected to as being dependent upon a rejected base claim, but would be allowable if rewritten in independent form including all of the limitations of the base claim and any intervening claims.
+
+THIS ACTION IS MADE FINAL.
+A SHORTENED STATUTORY PERIOD FOR REPLY TO THIS FINAL ACTION IS SET TO EXPIRE THREE MONTHS FROM THE MAILING DATE OF THIS ACTION.

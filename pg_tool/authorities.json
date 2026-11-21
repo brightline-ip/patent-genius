@@ -1,0 +1,345 @@
+{
+ "version": "1.0",
+ "dated": "2026-11-20",
+ "review": "NEEDS OWNER REVIEW. Section numbers and titles were checked on 2026-11-20 (see checked_against); which pointers go with which issue, and the pre-AIA ranges whose titles were not confirmed, have not been reviewed by a practitioner.",
+ "scope": "Pointers only: the name of a section of the MPEP, 35 USC or 37 CFR that a practitioner may want to read for an issue. No case law, no summary of what a provision requires, no view on how it applies. Section numbers and titles can change between MPEP editions and revisions: confirm each against the edition in force before relying on it (see checked_against).",
+ "aia_split": "Applications with an effective filing date on or after 2013-03-16 are examined under the AIA versions of 35 USC 102 and 103; earlier ones under the pre-AIA versions. The action itself says which applies; the tool reads that statement from the text and, when it cannot, lists both sets.",
+ "sources": {
+  "35 USC": "uscode.house.gov",
+  "37 CFR": "ecfr.gov",
+  "MPEP": "uspto.gov (Manual of Patent Examining Procedure)"
+ },
+ "entries": [
+  {
+   "id": "usc-101",
+   "kind": "35 USC",
+   "section": "101",
+   "title": "Inventions patentable",
+   "regime": "both",
+   "issues": [
+    "101"
+   ],
+   "title_status": "official"
+  },
+  {
+   "id": "mpep-2106",
+   "kind": "MPEP",
+   "section": "2106",
+   "title": "Patent subject matter eligibility",
+   "regime": "both",
+   "issues": [
+    "101"
+   ],
+   "title_status": "official"
+  },
+  {
+   "id": "usc-102-aia",
+   "kind": "35 USC",
+   "section": "102 (AIA)",
+   "title": "Conditions for patentability; novelty",
+   "regime": "aia",
+   "issues": [
+    "102"
+   ],
+   "title_status": "official"
+  },
+  {
+   "id": "mpep-2150",
+   "kind": "MPEP",
+   "section": "2150 to 2159",
+   "title": "Examination Guidelines for 35 U.S.C. 102 and 103 as Amended by the First Inventor To File Provisions of the Leahy-Smith America Invents Act",
+   "regime": "aia",
+   "issues": [
+    "102",
+    "103"
+   ],
+   "title_status": "title of the first section of the range"
+  },
+  {
+   "id": "usc-102-preaia",
+   "kind": "35 USC",
+   "section": "102 (pre-AIA)",
+   "title": "Conditions for patentability; novelty and loss of right to patent",
+   "regime": "pre_aia",
+   "issues": [
+    "102"
+   ],
+   "title_status": "official",
+   "note": "the version in force before 2013-03-16"
+  },
+  {
+   "id": "mpep-2131",
+   "kind": "MPEP",
+   "section": "2131",
+   "title": "Anticipation — Application of 35 U.S.C. 102",
+   "regime": "both",
+   "issues": [
+    "102"
+   ],
+   "title_status": "official"
+  },
+  {
+   "id": "mpep-2132",
+   "kind": "MPEP",
+   "section": "2132 to 2138",
+   "title": "Title not confirmed here: see the MPEP sections on pre-AIA 35 U.S.C. 102",
+   "regime": "pre_aia",
+   "issues": [
+    "102"
+   ],
+   "title_status": "section range, titles not confirmed"
+  },
+  {
+   "id": "mpep-2146",
+   "kind": "MPEP",
+   "section": "2146",
+   "title": "Title not confirmed here: see the MPEP",
+   "regime": "pre_aia",
+   "issues": [
+    "103"
+   ],
+   "title_status": "section, title not confirmed"
+  },
+  {
+   "id": "usc-103-aia",
+   "kind": "35 USC",
+   "section": "103 (AIA)",
+   "title": "Conditions for patentability; non-obvious subject matter",
+   "regime": "aia",
+   "issues": [
+    "103"
+   ],
+   "title_status": "official"
+  },
+  {
+   "id": "usc-103-preaia",
+   "kind": "35 USC",
+   "section": "103(a) (pre-AIA)",
+   "title": "Conditions for patentability; non-obvious subject matter",
+   "regime": "pre_aia",
+   "issues": [
+    "103"
+   ],
+   "title_status": "official",
+   "note": "the version in force before 2013-03-16"
+  },
+  {
+   "id": "mpep-2141",
+   "kind": "MPEP",
+   "section": "2141",
+   "title": "Examination Guidelines for Determining Obviousness Under 35 U.S.C. 103",
+   "regime": "both",
+   "issues": [
+    "103"
+   ],
+   "title_status": "official"
+  },
+  {
+   "id": "mpep-2143",
+   "kind": "MPEP",
+   "section": "2143",
+   "title": "Examples of Basic Requirements of a Prima Facie Case of Obviousness",
+   "regime": "both",
+   "issues": [
+    "103"
+   ],
+   "title_status": "official"
+  },
+  {
+   "id": "mpep-2145",
+   "kind": "MPEP",
+   "section": "2145",
+   "title": "Consideration of Applicant's Rebuttal Arguments and Evidence",
+   "regime": "both",
+   "issues": [
+    "103"
+   ],
+   "title_status": "official"
+  },
+  {
+   "id": "usc-112",
+   "kind": "35 USC",
+   "section": "112",
+   "title": "Specification",
+   "regime": "both",
+   "issues": [
+    "112"
+   ],
+   "title_status": "official"
+  },
+  {
+   "id": "mpep-2161",
+   "kind": "MPEP",
+   "section": "2161 to 2165",
+   "title": "Three Separate Requirements for Specification Under 35 U.S.C. 112(a) or Pre-AIA 35 U.S.C. 112, First Paragraph",
+   "regime": "both",
+   "issues": [
+    "112"
+   ],
+   "title_status": "title of the first section of the range"
+  },
+  {
+   "id": "mpep-2171",
+   "kind": "MPEP",
+   "section": "2171 to 2173",
+   "title": "Two Separate Requirements for Claims Under 35 U.S.C. 112(b) or Pre-AIA 35 U.S.C. 112, Second Paragraph",
+   "regime": "both",
+   "issues": [
+    "112"
+   ],
+   "title_status": "title of the first section of the range"
+  },
+  {
+   "id": "mpep-804",
+   "kind": "MPEP",
+   "section": "804",
+   "title": "Definition of double patenting",
+   "regime": "both",
+   "issues": [
+    "dp"
+   ],
+   "title_status": "official"
+  },
+  {
+   "id": "cfr-1-321",
+   "kind": "37 CFR",
+   "section": "1.321",
+   "title": "Statutory disclaimers, including terminal disclaimers",
+   "regime": "both",
+   "issues": [
+    "dp"
+   ],
+   "title_status": "official"
+  },
+  {
+   "id": "usc-121",
+   "kind": "35 USC",
+   "section": "121",
+   "title": "Divisional applications",
+   "regime": "both",
+   "issues": [
+    "restriction"
+   ],
+   "title_status": "official"
+  },
+  {
+   "id": "mpep-800",
+   "kind": "MPEP",
+   "section": "Chapter 800",
+   "title": "Restriction in Applications Filed Under 35 U.S.C. 111; Double Patenting",
+   "regime": "both",
+   "issues": [
+    "restriction"
+   ],
+   "title_status": "official"
+  },
+  {
+   "id": "cfr-1-111",
+   "kind": "37 CFR",
+   "section": "1.111",
+   "title": "Reply by applicant or patent owner to a non-final Office action",
+   "regime": "both",
+   "issues": [
+    "reply"
+   ],
+   "title_status": "official"
+  },
+  {
+   "id": "cfr-1-113",
+   "kind": "37 CFR",
+   "section": "1.113",
+   "title": "Final rejection or action",
+   "regime": "both",
+   "issues": [
+    "reply",
+    "final"
+   ],
+   "title_status": "official"
+  },
+  {
+   "id": "cfr-1-114",
+   "kind": "37 CFR",
+   "section": "1.114",
+   "title": "Request for continued examination",
+   "regime": "both",
+   "issues": [
+    "final"
+   ],
+   "title_status": "official"
+  },
+  {
+   "id": "cfr-1-116",
+   "kind": "37 CFR",
+   "section": "1.116",
+   "title": "Amendments and affidavits or other evidence after final action and prior to appeal",
+   "regime": "both",
+   "issues": [
+    "final"
+   ],
+   "title_status": "official"
+  },
+  {
+   "id": "cfr-1-133",
+   "kind": "37 CFR",
+   "section": "1.133",
+   "title": "Interviews",
+   "regime": "both",
+   "issues": [
+    "interview"
+   ],
+   "title_status": "official"
+  },
+  {
+   "id": "cfr-1-136",
+   "kind": "37 CFR",
+   "section": "1.136",
+   "title": "Extensions of time",
+   "regime": "both",
+   "issues": [
+    "reply"
+   ],
+   "title_status": "official"
+  },
+  {
+   "id": "mpep-710",
+   "kind": "MPEP",
+   "section": "710",
+   "title": "Period for reply",
+   "regime": "both",
+   "issues": [
+    "reply"
+   ],
+   "title_status": "official"
+  },
+  {
+   "id": "mpep-713",
+   "kind": "MPEP",
+   "section": "713",
+   "title": "Interviews",
+   "regime": "both",
+   "issues": [
+    "interview"
+   ],
+   "title_status": "official"
+  },
+  {
+   "id": "cfr-1-75",
+   "kind": "37 CFR",
+   "section": "1.75",
+   "title": "Claim(s)",
+   "regime": "both",
+   "issues": [
+    "objection"
+   ],
+   "title_status": "official"
+  }
+ ],
+ "checked_against": {
+  "date": "2026-11-20",
+  "mpep": "MPEP Ninth Edition, Revision 01.2024 (no later revision was shown)",
+  "cfr": "37 CFR as in the eCFR current as of 2026-10-27",
+  "usc": "GPO US Code, 2023 edition (2011 edition for the pre-AIA text of 35 USC 102 and 103); not re-read at uscode.house.gov",
+  "covers": "section numbers and titles only",
+  "title_status": "official = the title as published; title of the first section of the range = a range of sections whose first section has that title; not confirmed = no title was checked, read the MPEP"
+ }
+}

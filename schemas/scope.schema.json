@@ -1,0 +1,82 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "urn:brightline-ip:patent-genius:scope",
+ "title": "Patent Genius scope",
+ "description": "Everything that decides which applications, years and documents Patent Genius works on. One file, scope.json, in the data folder. No CPC code, field name, year or document code lives in the program itself.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": ["scope_version", "fields", "filing"],
+ "properties": {
+  "scope_version": {"const": 1},
+  "label": {"type": "string", "maxLength": 120, "description": "Free text for you; never used for matching."},
+  "fields": {
+   "type": "array",
+   "minItems": 1,
+   "maxItems": 40,
+   "description": "Technology fields. A field is a name you choose plus the CPC symbols that define it.",
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["name", "seeds"],
+    "properties": {
+     "name": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,31}$", "description": "Lower case, digits and underscores; starts with a letter; not a Windows device name."},
+     "seeds": {"type": "array", "minItems": 1, "maxItems": 200, "items": {"type": "string", "pattern": "^[A-HY][0-9]{2}[A-Z]([0-9]{1,4}/[0-9]+)?$"}, "description": "CPC subclass (A01B) or group (A01B1/00) symbols; each is expanded through the CPC Title List."},
+     "historical_prefixes": {"type": "array", "maxItems": 100, "items": {"type": "string", "pattern": "^[A-HY][0-9]{2}[A-Z]([0-9]{1,4}/)?$"}, "description": "Symbols retired from the current scheme that older filings may still carry."}
+    }
+   }
+  },
+  "cpc_title_list": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "zip": {"type": "string", "maxLength": 260, "description": "File name of the CPC Title List archive you downloaded (kept in the data folder under inputs/)."},
+    "version": {"type": "string", "pattern": "^[0-9A-Za-z._-]{1,32}$", "description": "Scheme version, for example 2026.08."},
+    "source_url": {"type": "string", "maxLength": 500}
+   }
+  },
+  "filing": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": ["from", "to_exclusive"],
+   "description": "Frames are built by FILING date. Windows are half-open: from is included, to_exclusive is not.",
+   "properties": {
+    "from": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+    "to_exclusive": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+    "window_days": {"type": "integer", "minimum": 1, "maximum": 31, "default": 7}
+   }
+  },
+  "publication_years": {
+   "type": ["object", "null"],
+   "additionalProperties": false,
+   "description": "A post-filter on reports only. It never changes how frames are built (frames use the filing date).",
+   "properties": {"from": {"type": "integer", "minimum": 1976, "maximum": 2100}, "to": {"type": "integer", "minimum": 1976, "maximum": 2100}}
+  },
+  "data_types": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {"enum": ["frames", "events", "oa_rejections", "oa_citations", "documents"]},
+   "description": "What you intend to collect. Informational for now: nothing is collected unless you run a collection command."
+  },
+  "documents": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "preset": {"enum": ["none", "office-actions", "prosecution", "procedural", "custom"], "default": "none"},
+    "codes": {"type": "array", "maxItems": 60, "items": {"type": "string", "pattern": "^[A-Za-z0-9./ -]{1,24}$"}, "description": "Used only with preset custom."}
+   }
+  },
+  "sample": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {"per_field_year": {"type": "integer", "minimum": 1, "maximum": 100000}}
+  },
+  "limits": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "max_applications": {"type": ["integer", "null"], "minimum": 1},
+    "max_requests_per_run": {"type": ["integer", "null"], "minimum": 1}
+   }
+  }
+ }
+}

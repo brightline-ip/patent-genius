@@ -1,0 +1,21 @@
+{
+ "version": "1.0",
+ "dated": "2026-11-20",
+ "basis": "Weights were set by judgement before any result was seen. They are not fitted to, or derived from, any data. Change them in <data folder>/similarity.json (see docs/SIMILAR.md); the weights used are echoed in every result.",
+ "weights": {
+  "statute_set": 0.35,
+  "references": 0.20,
+  "examiner": 0.15,
+  "art_unit": 0.10,
+  "cpc": 0.10,
+  "ground_101": 0.05,
+  "finality": 0.05
+ },
+ "tiers": [
+  {"name": "full", "min_coverage": 0.85},
+  {"name": "high", "min_coverage": 0.60},
+  {"name": "partial", "min_coverage": 0.30},
+  {"name": "thin", "min_coverage": 0.0}
+ ],
+ "defaults": {"min_score": 0.5, "limit": 20, "min_n": 5, "pool_cap": 20000}
+}

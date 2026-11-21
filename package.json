@@ -1,0 +1,10 @@
+{
+  "name": "patent-genius-scripts",
+  "version": "0.1.0",
+  "description": "Node.js helper scripts of Patent Genius (frame harvesting and acquisition through the optional Patent Research Hub). No dependencies.",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": { "node": ">=24.13" },
+  "dependencies": {}
+}

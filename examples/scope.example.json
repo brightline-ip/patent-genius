@@ -1,0 +1,19 @@
+{
+ "scope_version": 1,
+ "label": "Example scope: two invented fields (replace every value with your own)",
+ "fields": [
+  {"name": "agri", "seeds": ["A01B", "A01C1/00"], "historical_prefixes": []},
+  {"name": "soil_sensing", "seeds": ["G01N33/24"], "historical_prefixes": ["G01N33/"]}
+ ],
+ "cpc_title_list": {
+  "zip": "CPCTitleList-example.zip",
+  "version": "2026.08",
+  "source_url": "https://www.cooperativepatentclassification.org/"
+ },
+ "filing": {"from": "2012-01-01", "to_exclusive": "2014-01-01", "window_days": 7},
+ "publication_years": null,
+ "data_types": ["frames", "events"],
+ "documents": {"preset": "none", "codes": []},
+ "sample": {"per_field_year": 30},
+ "limits": {"max_applications": 2000, "max_requests_per_run": 500}
+}

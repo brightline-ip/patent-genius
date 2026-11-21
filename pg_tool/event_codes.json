@@ -1,0 +1,587 @@
+{
+ "version": "1.2",
+ "dated": "2026-11-21",
+ "status": "Every code below was checked against the official USPTO PatEx 2022 event-code list (pg_tool/data/uspto_event_codes.csv). The code descriptions are the USPTO's; which codes count as an interview, an abandonment, an amendment and so on (the roles) is Patent Genius's own mapping.",
+ "official_list": {
+  "file": "pg_tool/data/uspto_event_codes.csv",
+  "name": "USPTO PatEx 2022 event_codes.csv",
+  "source_url": "https://data.uspto.gov/ui/datasets/products/files/ECOPAIR/2022/event_codes.csv.zip",
+  "retrieved": "2026-11-21",
+  "zip_sha256": "d3dc72afcd38a0e677f116faf979179ec34e0dbc0520e5f9e95c39091ba85c57",
+  "csv_sha256": "6175d149fd0e883bbabf9dae55b67b420f977fa334704053ab4bbd55acb4f836",
+  "rows": 2194,
+  "licence": "USPTO data is in the public domain"
+ },
+ "roles": {
+  "office_action": "an Office action (rejection, restriction or supplemental action) is recorded",
+  "mail_office_action": "the mailing of an Office action is recorded as its own event (it can sit a few days from the action itself)",
+  "allowance": "notice of allowance mailed",
+  "abandonment": "the application was abandoned during or after prosecution (any of the official abandonment codes below)",
+  "abandonment_for_continuation": "abandoned in order to continue in a child application (labelled \"abandoned for continuation\", kept apart from other abandonments)",
+  "abandonment_rescinded": "an abandonment was undone: an abandonment followed by one of these is not final",
+  "preexam_abandonment": "abandonment before examination: outside prosecution after an Office action; labelled, never an outcome of an action",
+  "disposal_for_rce": "disposal because an RCE, CPA or R129 was filed: NOT an abandonment",
+  "interview": "an examiner interview",
+  "amendment": "an applicant reply or amendment",
+  "rce": "request for continued examination",
+  "appeal": "an appeal step",
+  "afcp": "after-final consideration request",
+  "pre_appeal": "pre-appeal conference decision",
+  "petition": "a petition"
+ },
+ "turning_roles": [
+  "office_action",
+  "mail_office_action",
+  "allowance",
+  "abandonment",
+  "abandonment_for_continuation",
+  "rce",
+  "appeal"
+ ],
+ "abandonment_roles": [
+  "abandonment",
+  "abandonment_for_continuation"
+ ],
+ "rescission_role": "abandonment_rescinded",
+ "mail_pairs": {
+  "CTNF": [
+   "CTNF",
+   "MCTNF"
+  ],
+  "CTFR": [
+   "CTFR",
+   "MCTFR"
+  ],
+  "CTRS": [
+   "CTRS",
+   "MCTRS"
+  ]
+ },
+ "not_in_the_official_list": [
+  "ABN."
+ ],
+ "codes": {
+  "CTNF": {
+   "role": "office_action",
+   "meaning": "Non-Final Rejection",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "CTFR": {
+   "role": "office_action",
+   "meaning": "Final Rejection",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "CTRS": {
+   "role": "office_action",
+   "meaning": "Restriction/Election Requirement",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "MCTNF": {
+   "role": "mail_office_action",
+   "meaning": "Mail Non-Final Rejection",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "MCTFR": {
+   "role": "mail_office_action",
+   "meaning": "Mail Final Rejection (PTOL - 326)",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "MCTRS": {
+   "role": "mail_office_action",
+   "meaning": "Mail Restriction Requirement",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "MN/=.": {
+   "role": "allowance",
+   "meaning": "Mail Notice of Allowance",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "ABN2": {
+   "role": "abandonment",
+   "meaning": "Aband. for Failure to Respond to O. A.",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "ABN3": {
+   "role": "abandonment",
+   "meaning": "Express Abandonment (during Examination)",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "ABN4": {
+   "role": "abandonment",
+   "meaning": "Express Abandonment after Allowance",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "ABN5": {
+   "role": "abandonment",
+   "meaning": "Aband. Recorded after Prior Disposal",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "ABN6": {
+   "role": "abandonment",
+   "meaning": "Abandonment for Failure to Pay Issue Fee",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "ABN7": {
+   "role": "abandonment",
+   "meaning": "Abandonment for Failure to Correct Drawings/Oath/NonPub Request",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "ABN8": {
+   "role": "abandonment",
+   "meaning": "Abandonment -- Failure to Respond to 30-Day Property Rights Letter",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "ABN10": {
+   "role": "abandonment",
+   "meaning": "Abandonment after Examiner's Answer or PTAB Decision",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "MABN": {
+   "role": "abandonment",
+   "meaning": "Abandonment Mailed",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "MABN2": {
+   "role": "abandonment",
+   "meaning": "Mail Abandonment for Failure to Respond to Office Action",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "MABN3": {
+   "role": "abandonment",
+   "meaning": "Mail Express Abandonment (During Examination)",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "MABN4": {
+   "role": "abandonment",
+   "meaning": "Mail Express Abandonment after Allowance",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "MABN5": {
+   "role": "abandonment",
+   "meaning": "Mail Abandonment after Prior Disposal",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "MABN6": {
+   "role": "abandonment",
+   "meaning": "Mail Abandonment for Failure to Pay Issue Fee",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "MABN7": {
+   "role": "abandonment",
+   "meaning": "Mail Abandonment for Failure to Correct Drawings/Oath",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "MABN10": {
+   "role": "abandonment",
+   "meaning": "Mail of Abandonment after Examiner's Answer or PTAB Decision",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "NABN": {
+   "role": "abandonment",
+   "meaning": "Notice of Abandonment",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "EABN": {
+   "role": "abandonment",
+   "meaning": "Letter of Express Abandonment Filed",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "EXABN": {
+   "role": "abandonment",
+   "meaning": "Applicant has Expressly requested that the case be Abandoned",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "AFWC": {
+   "role": "abandonment_for_continuation",
+   "meaning": "Abandonment for Purposes of Filing an FWC - File Combined with Child Application",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "NRAB": {
+   "role": "abandonment_rescinded",
+   "meaning": "Notice of Rescinded Abandonment in TCs",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "N421": {
+   "role": "abandonment_rescinded",
+   "meaning": "Notice of Rescinded Abandonment (PTOL-393)",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "MNRAB": {
+   "role": "abandonment_rescinded",
+   "meaning": "Mail Notice of Rescinded Abandonment",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "RABN": {
+   "role": "abandonment_rescinded",
+   "meaning": "ABANDONMENT - RESTORED",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "J520": {
+   "role": "abandonment_rescinded",
+   "meaning": "Abandonment Vacated",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "MM327-C": {
+   "role": "abandonment_rescinded",
+   "meaning": "Mail PUB Notice of Rescinded Abandonment",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "M327-C": {
+   "role": "abandonment_rescinded",
+   "meaning": "PUB Notice of Rescinded Abandonment",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "ODPD17": {
+   "role": "abandonment_rescinded",
+   "meaning": "PUB NOTICE OF RESCINDED ABANDONMENT",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "MODPD17": {
+   "role": "abandonment_rescinded",
+   "meaning": "Mail PUB NOTICE OF RESCINDED ABANDONMENT",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "ABN1": {
+   "role": "preexam_abandonment",
+   "meaning": "Abandonment -- Incomplete Application - Preexam",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "ABNP": {
+   "role": "preexam_abandonment",
+   "meaning": "Preexam Abandonment",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "ABNX": {
+   "role": "preexam_abandonment",
+   "meaning": "Abandonment -- During Preexam Processing",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "ABN/": {
+   "role": "preexam_abandonment",
+   "meaning": "Abandonment -- Inc. Application under Rule 53(b) - Filing Fee Not Paid",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "ABNF": {
+   "role": "preexam_abandonment",
+   "meaning": "Abandonment -- Inc. Application under Rule 53(b) - Filing Fee Paid",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "ABNC": {
+   "role": "preexam_abandonment",
+   "meaning": "Abandonment -- Failure to Comply with Sequence Rules",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "MABNP": {
+   "role": "preexam_abandonment",
+   "meaning": "Mail Preexam Abandonment",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "WABN": {
+   "role": "preexam_abandonment",
+   "meaning": "Withdraw Publication/Pre-Exam Abandon",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "WPABN": {
+   "role": "preexam_abandonment",
+   "meaning": "Withdraw Pre-Exam Abandon",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "ABN9": {
+   "role": "disposal_for_rce",
+   "meaning": "Disposal for a RCE / CPA / R129",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "EXIN": {
+   "role": "interview",
+   "meaning": "Interview Summary Record",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv",
+   "initiator": "unspecified"
+  },
+  "EXIA": {
+   "role": "interview",
+   "meaning": "Interview Summary- Applicant Initiated",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv",
+   "initiator": "applicant"
+  },
+  "EXAT": {
+   "role": "interview",
+   "meaning": "Interview Summary - Applicant Initiated - Telephonic",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv",
+   "initiator": "applicant"
+  },
+  "EXAP": {
+   "role": "interview",
+   "meaning": "Interview Summary - Applicant Initiated - Personal",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv",
+   "initiator": "applicant"
+  },
+  "EXAC": {
+   "role": "interview",
+   "meaning": "Interview Summary - Applicant Initiated - Conference",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv",
+   "initiator": "applicant"
+  },
+  "EXIE": {
+   "role": "interview",
+   "meaning": "Interview Summary - Examiner Initiated",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv",
+   "initiator": "examiner"
+  },
+  "EXET": {
+   "role": "interview",
+   "meaning": "Interview Summary - Examiner Initiated - Telephonic",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv",
+   "initiator": "examiner"
+  },
+  "EXEP": {
+   "role": "interview",
+   "meaning": "Interview Summary - Examiner Initiated - Personal",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv",
+   "initiator": "examiner"
+  },
+  "EXEC": {
+   "role": "interview",
+   "meaning": "Interview Summary - Examiner Initiated - Conference",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv",
+   "initiator": "examiner"
+  },
+  "A...": {
+   "role": "amendment",
+   "meaning": "Response after Non-Final Action",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "A.NE": {
+   "role": "amendment",
+   "meaning": "Response after Final Action",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "RCEX": {
+   "role": "rce",
+   "meaning": "Request for Continued Examination (RCE)",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "N/AP": {
+   "role": "appeal",
+   "meaning": "Notice of Appeal Filed",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "AP.B": {
+   "role": "appeal",
+   "meaning": "Appeal Brief Filed",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "RAFC": {
+   "role": "afcp",
+   "meaning": "PILOT- Request for After Final Consideration Program",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "APCA": {
+   "role": "pre_appeal",
+   "meaning": "Pre-Appeal Conference Decision - Rejection Withdrawn",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "APCR": {
+   "role": "pre_appeal",
+   "meaning": "Pre-Appeal Conference Decision - Reopen Prosecution",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "APCP": {
+   "role": "pre_appeal",
+   "meaning": "Pre-Appeal Conference Decision - Proceed to PTAB",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "APCD": {
+   "role": "pre_appeal",
+   "meaning": "Pre-Appeal Conference Decision - Request Defective",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "PET.": {
+   "role": "petition",
+   "meaning": "Petition Entered",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "ELC.": {
+   "role": "amendment",
+   "meaning": "Response to Election / Restriction Filed",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "A.QU": {
+   "role": "amendment",
+   "meaning": "Response after Ex Parte Quayle Action",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "AAF.": {
+   "role": "amendment",
+   "meaning": "Response to Final Rejection",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "A.IR": {
+   "role": "amendment",
+   "meaning": "Amendment or Request for Reconsideration after Final Rejection",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "SA..": {
+   "role": "amendment",
+   "meaning": "Supplemental Response",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "SAFR": {
+   "role": "amendment",
+   "meaning": "Supplemental Amendment after Final Rejection",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "SANF": {
+   "role": "amendment",
+   "meaning": "Supplemental Amendment after Non-Final Office Action",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "SR..": {
+   "role": "office_action",
+   "meaning": "Supplemental Non-Final Rejection (PTOL-326)",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "SFR.": {
+   "role": "office_action",
+   "meaning": "Supplemental Final Rejection",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "SRNF": {
+   "role": "office_action",
+   "meaning": "Supplemental Non-Final Action",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "REST": {
+   "role": "office_action",
+   "meaning": "Requirement for Restriction / Election Only",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "RRES": {
+   "role": "office_action",
+   "meaning": "Restriction Requirement and Non-Final Rejection Counted (PTOL-326)",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "SRES": {
+   "role": "office_action",
+   "meaning": "Supplemental Restriction",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "MSFR.": {
+   "role": "mail_office_action",
+   "meaning": "Mail Supplemental Final Rejection",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "MSRNF": {
+   "role": "mail_office_action",
+   "meaning": "Mail Supplemental Non-Final Action",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "MSRES": {
+   "role": "mail_office_action",
+   "meaning": "Mail Supplemental Restriction / Election Requirement",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  },
+  "N/AP-NOA": {
+   "role": "appeal",
+   "meaning": "Notice of Appeal Filed After NOA",
+   "confirmed": true,
+   "source": "USPTO PatEx 2022 event_codes.csv"
+  }
+ },
+ "anchor": {
+  "mail_window_days": 1,
+  "ct_window_before_days": 14,
+  "ct_window_after_days": 1,
+  "note": "An action is anchored on its MAIL event at the record date (+-1 day; the provider date of a rejection record is the mailing date). When there is no mail event, on the action event itself within 14 days before to 1 day after that date. The action event is usually 1 to 9 days earlier than the mailing event."
+ },
+ "turning_precedence": [
+  "rce",
+  "appeal",
+  "allowance",
+  "abandonment_for_continuation",
+  "abandonment",
+  "office_action",
+  "mail_office_action"
+ ]
+}

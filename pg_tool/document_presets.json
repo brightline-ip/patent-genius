@@ -1,0 +1,7 @@
+{
+ "note": "USPTO file-wrapper document codes for each preset. Used by scope.json (documents.preset), acquire_family.mjs and acquire_supplement.mjs. Order matters: earlier codes are downloaded first when a per-application cap applies.",
+ "none": [],
+ "office-actions": ["CTNF", "CTFR"],
+ "prosecution": ["CTNF", "CTFR", "CTRS", "CTEQ", "CTAV", "NOA", "ABN", "REM", "A...", "A.NE", "A.PE", "A.NA", "AMSB", "RCEX", "CLM", "SPEC", "APP.TEXT", "ABST"],
+ "procedural": ["ELC.", "EXIN", "INTRVIEW.APP", "A.NE.AFCP", "AP.PRE.REQ", "AP.PRE.DEC", "N/AP", "AP.B", "APRB", "APEA", "APDA", "APDR", "APDP"]
+}

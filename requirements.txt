@@ -1,0 +1,8 @@
+# Patent Genius core: Python standard library only. Nothing is required for pip to install.
+#
+# Optional, only for OCR of scanned PDFs (ocr_run.py). Also needs the Tesseract OCR program on PATH
+# (or PG_TESSERACT pointing at it). PyMuPDF is AGPL-3.0 / commercial licensed: check that suits your use.
+# Pinned and hash-checked: requirements-ocr.txt (Setup installs it into a private .venv only on a yes).
+#
+# Optional, only for the extra JSON Schema checks in tests/test_schemas.py (skipped when absent).
+# jsonschema>=4

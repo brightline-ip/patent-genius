@@ -1,0 +1,27 @@
+{
+  "frame_version": 1,
+  "frame_id": "example-synthetic-frame",
+  "frozen_at": "2026-10-16T00:00:00Z",
+  "date_convention": "SYNTHETIC EXAMPLE. UTC calendar date derived from provider offset timestamps; windows are half-open [from, to).",
+  "windows": [
+    {"id": "w1", "from": "2021-10-16", "to": "2026-10-17", "basis": "filing_date", "publication_lag_cutoff": "2025-04-16"},
+    {"id": "w2", "from": "2016-10-16", "to": "2021-10-16", "basis": "filing_date"}
+  ],
+  "cpc": {"hierarchy_version": "2026.08", "strata": {"ai": {"seed_symbols": ["G06N3/02"], "expanded_symbols": ["G06N3/02", "G06N3/04"]}}},
+  "queries": [
+    {"query_id": "q-ai-w1", "stratum": "ai", "window_id": "w1", "route": "synthetic", "q": "SYNTHETIC", "retrieved_at": "2026-10-16T00:00:00Z", "provider_count": 2, "max_rows": null, "truncated": false,
+     "pages": [{"offset": 0, "limit": 100, "rows": 2, "response_sha256": "0000000000000000000000000000000000000000000000000000000000000000"}]},
+    {"query_id": "q-ai-w2", "stratum": "ai", "window_id": "w2", "route": "synthetic", "q": "SYNTHETIC", "retrieved_at": "2026-10-16T00:00:00Z", "provider_count": 0, "max_rows": null, "truncated": false, "pages": []}
+  ],
+  "eligibility": {"rules": ["synthetic: all rows eligible"], "family_definition": "synthetic family key", "dedup_rule": "by application_number"},
+  "rows": [
+    {"application_number": "17000001", "filing_date": "2022-01-05", "cpc": ["G06N3/04"], "strata": ["ai"], "query_ids": ["q-ai-w1"], "eligible": true, "family_key": "fam-1", "family_basis": "synthetic", "source": "frame"},
+    {"application_number": "17000002", "filing_date": "2023-06-30", "cpc": ["G06N3/02"], "strata": ["ai"], "query_ids": ["q-ai-w1"], "eligible": true, "family_key": "fam-2", "family_basis": "synthetic", "source": "frame"}
+  ],
+  "exclusions": [],
+  "funnel": {"candidates": 2, "deduplicated": 2, "eligible": 2, "excluded": 0, "families": 2, "selected": 1},
+  "selection": {"method": "stratified_random_by_family", "rng": "python random.Random", "seed": 20261016, "targets_per_stratum": {"ai": 1},
+    "selected": [{"family_key": "fam-1", "application_numbers": ["17000001"], "stratum": "ai", "selection_probability": 0.5}]},
+  "frame_coverage": null,
+  "notes": ["Synthetic example. Coverage unknown: results are descriptive for the selected sample only."]
+}

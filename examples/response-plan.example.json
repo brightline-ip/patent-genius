@@ -1,0 +1,112 @@
+{
+  "schema_version": "1.0",
+  "plan_id": "SYNTHETIC-PLAN-1",
+  "analysis": {
+    "application": "00000001",
+    "action_document_id": "SYNTHETIC-CTNF-1"
+  },
+  "route": {
+    "kind": "reply_non_final",
+    "interview_first": false,
+    "rationale": "Allowable subject matter indicated on a non-final action.",
+    "evidence": [
+      {
+        "source": "examples/synthetic-evidence-table.md",
+        "table": "Situation: action type / allowable subject matter indicated / response (claim-1 markup captured; 103 argument made)",
+        "row": "CTNF / allowable indicated / amended / not argued",
+        "column": "allowance",
+        "value": "76%",
+        "n": 49,
+        "unit": "rounds",
+        "kind": "classified_sample"
+      }
+    ]
+  },
+  "grounds": [
+    {
+      "ground_id": "R1",
+      "strategy": "amend_and_argue",
+      "amendment_claims": [
+        1
+      ],
+      "argument_ids": [
+        "G1"
+      ],
+      "template_section": "templates/oa-103-response.md#2"
+    },
+    {
+      "ground_id": "R2",
+      "strategy": "request_abeyance",
+      "rationale": "Decide on a terminal disclaimer once claim scope settles."
+    },
+    {
+      "ground_id": "O1",
+      "strategy": "rewrite_allowable_claims",
+      "amendment_claims": [
+        7
+      ]
+    }
+  ],
+  "amendments": [
+    {
+      "claim": 1,
+      "status": "currently_amended",
+      "markup": "... <ins>wherein the weights are updated per batch</ins> ...",
+      "source": "incorporated_dependent_claim",
+      "support": [
+        {
+          "document": "claims_as_filed",
+          "locator": "claim 4"
+        }
+      ],
+      "addresses_grounds": [
+        "R1"
+      ],
+      "new_matter_check": "supported"
+    },
+    {
+      "claim": 7,
+      "status": "new",
+      "markup": "<ins>Claim 4 rewritten in independent form ...</ins>",
+      "source": "allowable_claim_rewritten",
+      "support": [
+        {
+          "document": "claims_as_filed",
+          "locator": "claims 1 and 4"
+        }
+      ],
+      "addresses_grounds": [
+        "O1"
+      ],
+      "new_matter_check": "supported"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "G1",
+      "ground_id": "R1",
+      "kind": "missing_limitation",
+      "claims": [
+        1
+      ],
+      "claim_language": "wherein the weights are updated per batch",
+      "text": "Synthetic example argument.",
+      "authority": [
+        {
+          "citation": "MPEP 2143.03",
+          "checked_as_of": "2026-10-17"
+        }
+      ]
+    }
+  ],
+  "risks": [
+    {
+      "kind": "argument_based_disclaimer",
+      "note": "Synthetic example."
+    }
+  ],
+  "review": {
+    "status": "draft",
+    "disclaimer": "Drafting aid only; not legal advice. Evidence rows are descriptive correlations."
+  }
+}

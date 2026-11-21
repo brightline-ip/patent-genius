@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uspat:OutgoingDocument
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:uspat="urn:us:gov:doc:uspto:patent"
+    xmlns="urn:us:gov:doc:uspto:patent"
+    xmlns:com="http://www.wipo.int/standards/XMLSchema/ST96/Common" xmlns:uscom="urn:us:gov:doc:uspto:common"
+    xmlns:mml="http://www.w3.org/1998/Math/MathML"
+    com:documentFileName="SYNTHETIC Non-Final Rejection" com:id="ID_1" uscom:vendorName="SYNTHETIC-FIXTURE" uscom:createDateTime="2026-01-01T00:00:00"
+    com:st96Version="V2_1" com:ipoVersion="US_V7_1">
+
+    <uspat:DocumentMetadata com:id="id-002">
+        <uscom:DocumentCode>CTNF</uscom:DocumentCode>
+        <uscom:ApplicationNumberText uscom:electronicText="99000001">99/000,001</uscom:ApplicationNumberText>
+        <uscom:DocumentSourceIdentifier>CTNF</uscom:DocumentSourceIdentifier>
+        <uscom:GroupArtUnitNumber></uscom:GroupArtUnitNumber>
+    </uspat:DocumentMetadata>
+
+<uscom:P com:pNumber="1" com:id="p-001" uscom:alignmentCategory="center"><?PageStart number='1'?><uscom:BoundaryDataReference com:idref="bd-001" /><com:B><com:I>Notice of Pre-AIA or AIA Status</com:I></com:B></uscom:P>
+<uscom:FormParagraph com:id="fp-001"><uscom:FormParagraphNumber com:id="fpn-001">07-03-aia</uscom:FormParagraphNumber><uscom:P com:pNumber="4" com:id="p-004">This is a synthetic test document. The present application is treated as examined under the first inventor to file provisions of the AIA.</uscom:P>
+</uscom:FormParagraph><uscom:P com:pNumber="5" com:id="p-005">                                           <com:B>Response to RCE</com:B></uscom:P>
+<uscom:FormParagraph com:id="fp-002"><uscom:FormParagraphNumber com:id="fpn-003">07-42-05</uscom:FormParagraphNumber><uscom:P com:pNumber="6" com:id="p-006">A synthetic request for continued examination was filed in this invented application. The applicant's submission filed on <uscom:DataField com:id="df001" uscom:dataFieldNumber="1"><uscom:GeneralText>01/02/2026</uscom:GeneralText></uscom:DataField> has been entered. </uscom:P>
+</uscom:FormParagraph><uscom:P com:pNumber="10" com:id="p-010" uscom:alignmentCategory="center"><com:B><com:I>Claim Rejections - 35 USC § 103</com:I></com:B></uscom:P>
+<uscom:FormParagraph com:id="fp-004"><uscom:FormParagraphNumber com:id="fpn-005">07-20-aia</uscom:FormParagraphNumber><uscom:P com:pNumber="11" com:id="p-011">The following is a synthetic paraphrase of the statutory basis for obviousness rejections in this invented Office action.</uscom:P>
+</uscom:FormParagraph><uscom:P com:pNumber="13" com:id="p-013">Claims 1-3 are rejected under 35 U.S.C. 103 as being unpatentable over Example Reference A (US 0000001) in view of Example Reference B (US 0000002).</uscom:P>
+<uscom:P com:pNumber="14" com:id="p-014">Regarding claim 1, Example Reference A discloses a widget with a sensor. Example Reference B teaches a controller. It would have been obvious to combine them (invented rationale for testing only).</uscom:P>
+<uscom:P com:pNumber="15" com:id="p-015" uscom:alignmentCategory="center"><com:B><com:I>Conclusion</com:I></com:B></uscom:P>
+<uscom:P com:pNumber="16" com:id="p-016">Any inquiry concerning this communication should be directed to the Examiner of this invented application.</uscom:P>
+    <uscom:BoundaryDataBag>
+        <uscom:BoundaryData com:id="bd-001">
+            <uscom:SpannedBoundaryData>
+<uscom:HeaderText uscom:alignmentCategory="left">Application/Control Number: </uscom:HeaderText>
+<uscom:HeaderText uscom:alignmentCategory="left"><uscom:ApplicationNumberText>99/000,001	Page 2</uscom:ApplicationNumberText></uscom:HeaderText>
+            </uscom:SpannedBoundaryData>
+            <uscom:SpannedBoundaryData>
+<uscom:HeaderText uscom:alignmentCategory="left">Art Unit: </uscom:HeaderText>
+<uscom:HeaderText uscom:alignmentCategory="left"><uscom:GroupArtUnitNumber>9999</uscom:GroupArtUnitNumber></uscom:HeaderText>
+            </uscom:SpannedBoundaryData>
+        </uscom:BoundaryData>
+    </uscom:BoundaryDataBag>
+</uspat:OutgoingDocument>

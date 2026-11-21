@@ -1,0 +1,83 @@
+{
+  "matter": "demo",
+  "required_sections": [
+    "# Technical disclosure",
+    "# Claims"
+  ],
+  "requirements": [
+    {
+      "id": "D1",
+      "decision": "mapped",
+      "evidence": [
+        "client:demo:disclosure:32439103ba2dc2d4b691261b"
+      ],
+      "draft_span": [
+        23,
+        184
+      ],
+      "kind": "disclosure"
+    }
+  ],
+  "quotations": [
+    {
+      "evidence": "client:demo:disclosure:32439103ba2dc2d4b691261b",
+      "text": "treatment stops when a person enters the operating zone."
+    }
+  ],
+  "claim_scope": "claims_present",
+  "claims": [
+    {
+      "id": "1",
+      "status": "proposed",
+      "depends_on": [],
+      "limitations": [
+        {
+          "id": "1.a",
+          "support_id": "s1"
+        }
+      ],
+      "combination_support_id": "combo"
+    }
+  ],
+  "support_records": [
+    {
+      "id": "s1",
+      "kind": "limitation",
+      "claim_id": "1",
+      "limitation_ids": [
+        "1.a"
+      ],
+      "basis": "disclosure_only",
+      "status": "mapped_for_review",
+      "evidence": [
+        "client:demo:disclosure:32439103ba2dc2d4b691261b"
+      ],
+      "draft_span": [
+        0,
+        20
+      ],
+      "written_description_review": "not_reviewed",
+      "enablement_review": "not_reviewed"
+    },
+    {
+      "id": "combo",
+      "kind": "combination",
+      "claim_id": "1",
+      "limitation_ids": [
+        "1.a"
+      ],
+      "basis": "disclosure_only",
+      "status": "mapped_for_review",
+      "evidence": [
+        "client:demo:disclosure:32439103ba2dc2d4b691261b"
+      ],
+      "draft_span": [
+        0,
+        20
+      ],
+      "written_description_review": "not_reviewed",
+      "enablement_review": "not_reviewed"
+    }
+  ],
+  "issues": []
+}

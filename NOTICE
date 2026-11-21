@@ -1,0 +1,19 @@
+Patent Genius
+Copyright 2026 Brightline IP
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+Third-party components and data sources
+- The Python core uses only the Python standard library. No third-party code is bundled.
+- Optional: PyMuPDF 1.28.2 (AGPL-3.0 / commercial licence), pinned and hash-checked in requirements-ocr.txt and installed by Setup into a
+  private .venv only if you say yes, and Tesseract OCR (Apache-2.0, installed separately), used only by ocr_run.py. Their licences apply to
+  your use of them; neither is distributed with this product.
+- Optional, installed separately: the Patent Research Hub (published by Brightline IP), which provides access to
+  USPTO Open Data Portal, PTAB and GovInfo APIs. You use your own credentials and are bound by each provider's
+  terms of use and rate limits.
+- pg_tool/data/uspto_event_codes.csv is the USPTO PatEx 2022 event-code list (event_codes.csv, from https://data.uspto.gov/ui/datasets/products/files/ECOPAIR/2022/event_codes.csv.zip,
+  retrieved 2026-11-21 (UTC); SHA-256 of the zip d3dc72afcd38a0e677f116faf979179ec34e0dbc0520e5f9e95c39091ba85c57). USPTO data is in the public domain. Patent Genius's
+  mapping of codes to roles (interview, abandonment, ...) is its own.
+- Data you download (USPTO file wrappers, PTAB decisions, Federal Circuit opinions via GovInfo, CPC scheme files)
+  remains subject to its publisher's terms. No such data is included in this repository.
+- tests/fixtures and examples contain only synthetic, invented material.

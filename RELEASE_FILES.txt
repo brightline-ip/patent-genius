@@ -1,0 +1,38 @@
+# Allowlist of files that may be part of a Patent Genius release.
+# One pattern per line, matched against the path relative to the repository root, with forward slashes.
+#   *   matches any characters except "/"      **  matches anything including "/"      ?  one character except "/"
+# A file that no line matches must not be committed or shipped (tests/test_release_allowlist.py enforces it, and the
+# release archive is built from this list). A line that matches no file is stale and also fails the test.
+LICENSE
+NOTICE
+README.md
+DISCLAIMER.md
+SECURITY.md
+CHANGELOG.md
+.gitignore
+.gitattributes
+.env.example
+RELEASE_FILES.txt
+requirements.txt
+requirements-ocr.txt
+Setup.cmd
+installer/*.ps1
+installer/*.txt
+tools/*.py
+package.json
+*.py
+*.mjs
+pg_tool/*.py
+pg_tool/*.json
+pg_tool/data/*.csv
+schemas/*.json
+templates/*.md
+templates/*.json
+skills/patent-genius/SKILL.md
+docs/*.md
+examples/*.json
+examples/*.md
+examples/*.txt
+examples/sample/*.txt
+tests/*.py
+tests/fixtures/**

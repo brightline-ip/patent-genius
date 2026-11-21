@@ -1,0 +1,140 @@
+{
+  "schema_version": "1.0",
+  "application": {
+    "number": "00000001",
+    "art_unit": "2129",
+    "technology": "ai",
+    "aia": true
+  },
+  "action": {
+    "document_id": "SYNTHETIC-CTNF-1",
+    "document_code": "CTNF",
+    "kind": "non_final",
+    "mail_date": "2026-01-15",
+    "shortened_statutory_period_months": 3,
+    "source_form": "xml"
+  },
+  "claims_status": {
+    "pending": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "rejected": [
+      1,
+      2,
+      3,
+      5,
+      6
+    ],
+    "objected_to": [
+      4
+    ],
+    "independent": [
+      1,
+      6
+    ]
+  },
+  "rejections": [
+    {
+      "id": "R1",
+      "statute": "103",
+      "claims": [
+        1,
+        2,
+        3,
+        5,
+        6
+      ],
+      "reference_ids": [
+        "A",
+        "B"
+      ],
+      "categories": [
+        "teaching_suggestion_motivation"
+      ],
+      "examiner_rationale": "Synthetic example: A teaches the model; B teaches the training step; motivation to improve accuracy.",
+      "limitation_mappings": [
+        {
+          "claim": 1,
+          "limitation": "training the model using a weighted loss",
+          "reference_id": "B",
+          "reference_locator": {
+            "paragraph": "[0031]"
+          },
+          "examiner_assertion": "B's loss is weighted",
+          "admitted_missing": false
+        }
+      ],
+      "locator": {
+        "page": 4
+      }
+    },
+    {
+      "id": "R2",
+      "statute": "double_patenting_nonstatutory",
+      "claims": [
+        1,
+        6
+      ],
+      "conflicting_application_or_patent": "US 11,000,000 B2",
+      "provisional": false,
+      "categories": [
+        "obvious_variant_of_reference_claims"
+      ],
+      "locator": {
+        "page": 3
+      }
+    }
+  ],
+  "objections": [
+    {
+      "id": "O1",
+      "kind": "claim",
+      "claims": [
+        4
+      ],
+      "categories": [
+        "dependent_on_rejected_claim_allowable"
+      ],
+      "allowable_if_rewritten": true,
+      "locator": {
+        "page": 7
+      }
+    }
+  ],
+  "references": [
+    {
+      "id": "A",
+      "citation": "US 2020/0000000 A1",
+      "kind": "us_publication",
+      "role": "primary",
+      "prior_art_basis": "102(a)(1)"
+    },
+    {
+      "id": "B",
+      "citation": "US 10,000,000 B2",
+      "kind": "us_patent",
+      "role": "secondary",
+      "prior_art_basis": "102(a)(1)"
+    }
+  ],
+  "allowable_subject_matter": {
+    "indicated": true,
+    "claims": [
+      4
+    ],
+    "condition": "rewrite_in_independent_form"
+  },
+  "provenance": {
+    "method": "manual",
+    "created": "2026-10-17T00:00:00Z",
+    "confidence": "high",
+    "ocr_derived": false,
+    "human_verified": false,
+    "notes": "Synthetic example for schema tests; not a real application."
+  }
+}
